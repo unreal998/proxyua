@@ -1,10 +1,5 @@
-const {
-  adminMenu,
-  userMenu,
-  settingsMenu,
-  createBackMenu,
-} = require("./menus");
-const { allowedUsers } = require("./constants");
+import { adminMenu, userMenu, settingsMenu, createBackMenu } from "./menus.js";
+import { allowedUsers } from "./constants.js";
 
 const setupHandlers = (bot) => {
   // Обробка команди /start
@@ -92,4 +87,4 @@ const setupHandlers = (bot) => {
   });
 };
 
-module.exports = setupHandlers;
+export default setupHandlers;

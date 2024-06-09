@@ -57,4 +57,4 @@ const createBackMenu = (text) => ({
   text: `Ви вибрали ${text}`,
 });
 
-module.exports = { adminMenu, userMenu, settingsMenu, createBackMenu };
+export { adminMenu, userMenu, settingsMenu, createBackMenu };

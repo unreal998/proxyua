@@ -1,6 +1,6 @@
-const TelegramBot = require("node-telegram-bot-api");
-const { TOKEN } = require("./constants");
+import TelegramBot from "node-telegram-bot-api";
+import { TOKEN } from "./constants.js";
 
 const bot = new TelegramBot(TOKEN, { polling: true });
 
-module.exports = bot;
+export default bot;
