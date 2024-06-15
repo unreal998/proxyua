@@ -1,28 +1,13 @@
-import { adminMenu, userMenu, settingsMenu, createBackMenu } from "./menus.js";
-import { allowedUsers } from "./constants.js";
+import { adminMenu, settingsMenu, createBackMenu } from "./menus.js";
 
-const setupHandlers = (bot) => {
-  // Обробка команди /start
-  bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    const userName = msg.from.first_name;
-    const username = msg.from.username;
-
-    if (allowedUsers.includes(username)) {
-      bot.sendMessage(chatId, `Привіт ${userName}\nГоловне меню:`, adminMenu);
-    } else {
-      bot.sendMessage(chatId, `Привіт ${userName}\nГоловне меню:`, userMenu);
-    }
-  });
-
+const setupHandlers = (bot, userData) => {
   // Обробка натискання кнопок
   bot.on("callback_query", (callbackQuery) => {
     const message = callbackQuery.message;
     const data = callbackQuery.data;
-    const username = callbackQuery.from.username;
 
     if (data === "Налаштування") {
-      if (allowedUsers.includes(username)) {
+      if (userData.type === 'admin') {
         bot.sendMessage(message.chat.id, settingsMenu.text, settingsMenu);
       } else {
         bot.sendMessage(
