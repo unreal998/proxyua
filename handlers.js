@@ -1,6 +1,6 @@
-import menuHandlers from './handlers/menuHandlers.js'
+import menuHandlers, {menuResponceHandlers} from './handlers/menuHandlers.js'
 
-const setupHandlers = (bot, userData) => {
+const setupHandlers = (bot, userData, responceMessageAwaiting) => {
   // Обробка натискання кнопок
   bot.on("callback_query", (callbackQuery) => {
     const message = callbackQuery.message;
@@ -8,14 +8,22 @@ const setupHandlers = (bot, userData) => {
     const parsedData = JSON.parse(cbData);
     switch(parsedData.type) {
       case 'menu':
-        menuHandlers(parsedData, bot, message, userData)
+        menuHandlers(parsedData, bot, message, userData, responceMessageAwaiting)
         break;
       default:
         bot.sendMessage(message.chat.id, 'callback type is missing');
     }
-    
-    
   });
+
+  bot.on('message', (msg) => {
+    switch(responceMessageAwaiting.type) {
+      case 'menu':
+        menuResponceHandlers(responceMessageAwaiting, bot, msg)
+        break;
+      default:
+        bot.sendMessage(message.chat.id, 'callback type is missing');
+    }
+  })
 };
 
 export default setupHandlers;

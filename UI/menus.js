@@ -1,4 +1,4 @@
-// Головне меню для адміна
+import { menuDictionary } from "./dictionary.js";
 const adminMenu = {
   reply_markup: {
     inline_keyboard: [
@@ -7,9 +7,9 @@ const adminMenu = {
           type: 'menu',
           button: 'Список проксі'
         })},
-        { text: "📈 Останні транзакції", callback_data: JSON.stringify({
+        { text: `➕ ${menuDictionary.ADD_PROXY}`, callback_data: JSON.stringify({
           type: 'menu',
-          button: "Останні транзакції"
+          button: menuDictionary.ADD_PROXY
         })},
       ],
       [

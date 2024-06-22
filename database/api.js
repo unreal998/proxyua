@@ -30,3 +30,15 @@ export async function addNewUser(msg) {
     set(ref(database, `users/${msg.chat.id}`), userData);
     Promise.resolve(userData);
 }
+
+export async function addNewProxyConfig(msg) {
+    const proxyData = {
+        address: msg.text || "",
+        status: true,
+        login: "",
+        password: '',
+        id: msg.chat.id
+    }
+    set(ref(database, `proxy/${msg.message_id}`), proxyData);
+    Promise.resolve(proxyData);
+}

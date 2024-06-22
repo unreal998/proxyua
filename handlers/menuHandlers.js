@@ -1,7 +1,11 @@
 import { adminMenu, createBackMenu, userMenu } from "../UI/menus.js";
 import { settingsMenu } from "../UI/settings.js";
+import { menuDictionary } from '../UI/dictionary.js';
+import {addNewProxyConfig } from "../database/api.js";
 
-export default function menuHandlers(cbData, bot, message, userData) {
+export default function menuHandlers(cbData, bot, message, userData, responceMessageAwaiting) {
+  responceMessageAwaiting.type = 'menu';
+  responceMessageAwaiting.lastRequestMessage = cbData.button;
     if (cbData.button === "Налаштування") {
         if (userData.type === 'admin') {
           bot.sendMessage(message.chat.id, settingsMenu.text, settingsMenu);
@@ -14,23 +18,23 @@ export default function menuHandlers(cbData, bot, message, userData) {
         }
       } else if (cbData.button === "Назад") {
         if (userData.type === "admin") {
-            bot.sendMessage(message.chat.id, "Головне меню:", adminMenu);
+            bot.sendMessage(message.chat.id, menuDictionary.MAIN_MENU, adminMenu);
         } else {
-            bot.sendMessage(message.chat.id, "Головне меню:", userMenu);
+            bot.sendMessage(message.chat.id, menuDictionary.MAIN_MENU, userMenu);
         }
       } else if (cbData.button === "Список проксі") {
         
-      } else if (cbData.button === "Останні транзакції") {
-        bot.sendMessage(
-          message.chat.id,
-          createBackMenu("Останні транзакції").text,
-          createBackMenu("Останні транзакції")
-        );
       } else if (cbData.button === "Відкриті заявки") {
         bot.sendMessage(
           message.chat.id,
           createBackMenu("Відкриті заявки").text,
           createBackMenu("Відкриті заявки")
+        );
+      } else if (cbData.button === menuDictionary.ADD_PROXY) {
+        bot.sendMessage(
+          message.chat.id,
+          'Введіть адресу проксі',
+          createBackMenu(menuDictionary.ADD_PROXY)
         );
       } else if (cbData.button === "Арендувати проксі") {
         bot.sendMessage(
@@ -59,4 +63,17 @@ export default function menuHandlers(cbData, bot, message, userData) {
       } else {
         bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.button}`);
       }
+}
+
+export function menuResponceHandlers(responceMessageAwaiting, bot, message) {
+  switch (responceMessageAwaiting.lastRequestMessage) {
+    case menuDictionary.ADD_PROXY:
+      addNewProxyConfig(message).then((data) => {
+        bot.sendMessage(message.chat.id, 'Дані проксі додано');
+      });
+      break;
+    default:
+      bot.sendMessage(message.chat.id, 'unknown text responce');
+  }
+
 }
