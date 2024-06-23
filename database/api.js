@@ -1,11 +1,6 @@
 import { ref, onValue, set, update, remove} from "firebase/database";
 import database from "./index.js";
 
-
-export function getProxyList() {
-
-}
-
 export async function authorization(chatId) {
     const userData = ref(database, `users/${chatId}`);
     return new Promise(function(resolve, reject) {
@@ -37,8 +32,25 @@ export async function addNewProxyConfig(msg) {
         status: true,
         login: "",
         password: '',
-        id: msg.chat.id
     }
-    set(ref(database, `proxy/${msg.message_id}`), proxyData);
-    Promise.resolve(proxyData);
+    return new Promise(function(resolve, reject) {
+        set(ref(database, `proxy/${msg.message_id}`), proxyData).then((data) => {
+            resolve(proxyData);
+        });
+    })
+
+    
+}
+
+export async function getProxyList() {
+    const proxyDataList = ref(database, `proxy/`);
+    return new Promise(function(resolve, reject) {
+        onValue(proxyDataList, (snapshot) => {
+            const data = snapshot.val();
+            resolve(data);
+        }, {
+            onlyOnce: true
+        });
+    })
+
 }

@@ -3,9 +3,9 @@ const adminMenu = {
   reply_markup: {
     inline_keyboard: [
       [
-        { text: "🌐 Список проксі", callback_data: JSON.stringify({
+        { text: `🌐 ${menuDictionary.PROXY_LIST}`, callback_data: JSON.stringify({
           type: 'menu',
-          button: 'Список проксі'
+          button: menuDictionary.PROXY_LIST
         })},
         { text: `➕ ${menuDictionary.ADD_PROXY}`, callback_data: JSON.stringify({
           type: 'menu',

@@ -1,7 +1,8 @@
 import { adminMenu, createBackMenu, userMenu } from "../UI/menus.js";
 import { settingsMenu } from "../UI/settings.js";
-import { menuDictionary } from '../UI/dictionary.js';
-import {addNewProxyConfig } from "../database/api.js";
+import { menuDictionary, proxyListMenu } from '../UI/dictionary.js';
+import {addNewProxyConfig, getProxyList } from "../database/api.js";
+import { generateProxyListMenu } from "../UI/proxyList.js";
 
 export default function menuHandlers(cbData, bot, message, userData, responceMessageAwaiting) {
   responceMessageAwaiting.type = 'menu';
@@ -10,7 +11,7 @@ export default function menuHandlers(cbData, bot, message, userData, responceMes
         if (userData.type === 'admin') {
           bot.sendMessage(message.chat.id, settingsMenu.text, settingsMenu);
         } else {
-          bot.sendMessage(
+          bot.sgetProxyListendMessage(
             message.chat.id,
             createBackMenu("Налаштування").text,
             createBackMenu("Налаштування")
@@ -22,8 +23,40 @@ export default function menuHandlers(cbData, bot, message, userData, responceMes
         } else {
             bot.sendMessage(message.chat.id, menuDictionary.MAIN_MENU, userMenu);
         }
-      } else if (cbData.button === "Список проксі") {
-        
+      } else if (cbData.button === menuDictionary.PROXY_LIST) {
+        getProxyList().then(data => {
+          const list = [];
+          for (const key in data) {
+            const element = data[key];
+            const listObject = {
+              text: `${element.address} - ${element.status ? '🟢' : '🔴'}`,
+              callback_data: JSON.stringify({
+                type: 'proxyMenu',
+                id: key,
+                button: element.address,
+              })
+            }
+            const editButton = {
+              text: `Edit`,
+              callback_data: JSON.stringify({
+                type: 'proxyMenu',
+                id: key,
+                button: proxyListMenu.EDIT,
+              })
+            }
+            const removeButton = {
+              text: `Remove`,
+              callback_data: JSON.stringify({
+                type: 'proxyMenu',
+                id: key,
+                button: proxyListMenu.REMOVE,
+              })
+            }
+            list.push([listObject]);
+            list.push([editButton, removeButton]);
+          }
+          bot.sendMessage(message.chat.id, 'Список проксі', generateProxyListMenu(list));
+        })
       } else if (cbData.button === "Відкриті заявки") {
         bot.sendMessage(
           message.chat.id,
