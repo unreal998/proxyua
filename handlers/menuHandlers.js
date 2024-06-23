@@ -1,4 +1,4 @@
-import { adminMenu, createBackMenu, userMenu } from "../UI/menus.js";
+import { adminMenu, createBackToMenuMenu, userMenu } from "../UI/menus.js";
 import { settingsMenu } from "../UI/settings.js";
 import { menuDictionary, proxyListMenu } from '../UI/dictionary.js';
 import {addNewProxyConfig, getProxyList } from "../database/api.js";
@@ -7,17 +7,17 @@ import { generateProxyListMenu } from "../UI/proxyList.js";
 export default function menuHandlers(cbData, bot, message, userData, responceMessageAwaiting) {
   responceMessageAwaiting.type = 'menu';
   responceMessageAwaiting.lastRequestMessage = cbData.button;
-    if (cbData.button === "Налаштування") {
+    if (cbData.button === menuDictionary.SETTINGS) {
         if (userData.type === 'admin') {
           bot.sendMessage(message.chat.id, settingsMenu.text, settingsMenu);
         } else {
-          bot.sgetProxyListendMessage(
+          bot.sendMessage(
             message.chat.id,
-            createBackMenu("Налаштування").text,
-            createBackMenu("Налаштування")
+            settingsMenu.text,
+            settingsMenu
           );
         }
-      } else if (cbData.button === "Назад") {
+      } else if (cbData.button === menuDictionary.MAIN_MENU) {
         if (userData.type === "admin") {
             bot.sendMessage(message.chat.id, menuDictionary.MAIN_MENU, adminMenu);
         } else {
@@ -37,7 +37,7 @@ export default function menuHandlers(cbData, bot, message, userData, responceMes
               })
             }
             const editButton = {
-              text: `Edit`,
+              text: proxyListMenu.EDIT,
               callback_data: JSON.stringify({
                 type: 'proxyMenu',
                 id: key,
@@ -45,7 +45,7 @@ export default function menuHandlers(cbData, bot, message, userData, responceMes
               })
             }
             const removeButton = {
-              text: `Remove`,
+              text: proxyListMenu.REMOVE,
               callback_data: JSON.stringify({
                 type: 'proxyMenu',
                 id: key,
@@ -60,38 +60,38 @@ export default function menuHandlers(cbData, bot, message, userData, responceMes
       } else if (cbData.button === "Відкриті заявки") {
         bot.sendMessage(
           message.chat.id,
-          createBackMenu("Відкриті заявки").text,
-          createBackMenu("Відкриті заявки")
+          "Відкриті заявки",
+          createBackToMenuMenu()
         );
       } else if (cbData.button === menuDictionary.ADD_PROXY) {
         bot.sendMessage(
           message.chat.id,
           'Введіть адресу проксі',
-          createBackMenu(menuDictionary.ADD_PROXY)
+          createBackToMenuMenu()
         );
       } else if (cbData.button === "Арендувати проксі") {
         bot.sendMessage(
           message.chat.id,
-          createBackMenu("Арендувати проксі").text,
-          createBackMenu("Арендувати проксі")
+          "Арендувати проксі",
+          createBackToMenuMenu()
         );
       } else if (cbData.button === "Поповнити гаманець") {
         bot.sendMessage(
           message.chat.id,
-          createBackMenu("Поповнити гаманець").text,
-          createBackMenu("Поповнити гаманець")
+          "Поповнити гаманець",
+          createBackToMenuMenu()
         );
       } else if (cbData.button === "Мої проксі") {
         bot.sendMessage(
           message.chat.id,
-          createBackMenu("Мої проксі").text,
-          createBackMenu("Мої проксі")
+          "Мої проксі",
+          createBackToMenuMenu()
         );
       } else if (cbData.button === "Мої транзакції") {
         bot.sendMessage(
           message.chat.id,
-          createBackMenu("Мої транзакції").text,
-          createBackMenu("Мої транзакції")
+          "Мої транзакції",
+          createBackToMenuMenu()
         );
       } else {
         bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.button}`);

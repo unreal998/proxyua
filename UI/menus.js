@@ -17,9 +17,9 @@ const adminMenu = {
           type: 'menu',
           button: "Відкриті заявки"
         })},
-        { text: "⚙️ Налаштування", callback_data: JSON.stringify({
+        { text: `⚙️ ${menuDictionary.SETTINGS}`, callback_data: JSON.stringify({
           type: 'menu',
-          button: "Налаштування"
+          button: menuDictionary.SETTINGS
         })}
       ],
     ],
@@ -59,14 +59,13 @@ const userMenu = {
 };
 
 // Створення меню з кнопкою "Назад"
-const createBackMenu = (text) => ({
+const createBackToMenuMenu = (text) => ({
   reply_markup: {
-    inline_keyboard: [[{ text: "🔙 Назад", callback_data:  JSON.stringify({
+    inline_keyboard: [[{ text: `🔙 ${menuDictionary.MAIN_MENU}`, callback_data:  JSON.stringify({
       type: 'menu',
-      button: "Назад"
+      button: menuDictionary.MAIN_MENU
     })}]],
-  },
-  text: `Ви вибрали ${text}`,
+  }
 });
 
-export { adminMenu, userMenu, createBackMenu };
+export { adminMenu, userMenu, createBackToMenuMenu };

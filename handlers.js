@@ -1,4 +1,5 @@
-import menuHandlers, {menuResponceHandlers} from './handlers/menuHandlers.js'
+import menuHandlers, {menuResponceHandlers} from './handlers/menuHandlers.js';
+import proxyMenuHandlers from './handlers/proxyHandlers.js';
 
 const setupHandlers = (bot, userData, responceMessageAwaiting) => {
   // Обробка натискання кнопок
@@ -8,7 +9,10 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
     const parsedData = JSON.parse(cbData);
     switch(parsedData.type) {
       case 'menu':
-        menuHandlers(parsedData, bot, message, userData, responceMessageAwaiting)
+        menuHandlers(parsedData, bot, message, userData, responceMessageAwaiting);
+        break;
+      case 'proxyMenu':
+        proxyMenuHandlers(parsedData, bot, message, userData, responceMessageAwaiting);
         break;
       default:
         bot.sendMessage(message.chat.id, 'callback type is missing');
