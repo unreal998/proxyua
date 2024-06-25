@@ -31,6 +31,30 @@ export async function addNewTransaction(transactionData) {
     Promise.resolve(transactionData);
 }
 
+export async function getTransactionData(transactionId) {
+    const proxyDataList = ref(database, `transactions/${transactionId}`);
+    return new Promise(function(resolve, reject) {
+        onValue(proxyDataList, (snapshot) => {
+            const data = snapshot.val();
+            resolve(data);
+        }, {
+            onlyOnce: true
+        });
+    })
+}
+
+export async function getTransactionList() {
+    const proxyDataList = ref(database, `transactions`);
+    return new Promise(function(resolve, reject) {
+        onValue(proxyDataList, (snapshot) => {
+            const data = snapshot.val();
+            resolve(data);
+        }, {
+            onlyOnce: true
+        });
+    })
+}
+
 export async function addNewProxyConfig(msg) {
     const proxyData = {
         address: msg.text || "",
