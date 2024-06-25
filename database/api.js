@@ -26,6 +26,11 @@ export async function addNewUser(msg) {
     Promise.resolve(userData);
 }
 
+export async function addNewTransaction(transactionData) {
+    set(ref(database, `transactions/${transactionData.id}`), transactionData);
+    Promise.resolve(transactionData);
+}
+
 export async function addNewProxyConfig(msg) {
     const proxyData = {
         address: msg.text || "",

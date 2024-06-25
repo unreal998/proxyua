@@ -1,6 +1,6 @@
 import bot from "./bot.js";
 import setupHandlers from "./handlers.js";
-import { authorization } from './database/api.js';
+import { authorization, addNewUser } from './database/api.js';
 import { userMenu, adminMenu } from './UI/menus.js';
 import { menuDictionary } from './UI/dictionary.js';
 
@@ -25,10 +25,10 @@ class ProxyUABot {
                 if (data) {
                     this.userData = data;
                     if (data.type === 'admin') {
-                        this.bot.sendMessage(chatId, `Привіт ${userFirstName}\n${menuDictionary.MAIN_MENU}`, adminMenu);
-                      } else {
                         this.bot.sendMessage(chatId, `Привіт ${userFirstName}\n${menuDictionary.MAIN_MENU}`, userMenu);
-                      }
+                    } else {
+                        this.bot.sendMessage(chatId, `Привіт ${userFirstName}\n${menuDictionary.MAIN_MENU}`, adminMenu);
+                    }
                 } else {
                     addNewUser(msg).then(data => {
                         this.userData = data;

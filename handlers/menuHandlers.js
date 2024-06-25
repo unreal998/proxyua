@@ -87,10 +87,10 @@ export default function menuHandlers(cbData, bot, message, userData, responceMes
           "Мої проксі",
           createBackToMenuMenu()
         );
-      } else if (cbData.button === "Мої транзакції") {
+      } else if (cbData.button === "Історія") {
         bot.sendMessage(
           message.chat.id,
-          "Мої транзакції",
+          "Історія",
           createBackToMenuMenu()
         );
       } else {
@@ -102,7 +102,7 @@ export function menuResponceHandlers(responceMessageAwaiting, bot, message) {
   switch (responceMessageAwaiting.lastRequestMessage) {
     case menuDictionary.ADD_PROXY:
       addNewProxyConfig(message).then((data) => {
-        bot.sendMessage(message.chat.id, 'Дані проксі додано');
+        bot.sendMessage(message.chat.id, 'Дані проксі додано', createBackToMenuMenu());
       });
       break;
     default:

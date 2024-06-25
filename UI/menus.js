@@ -45,9 +45,9 @@ const userMenu = {
           type: 'menu',
           button: 'Мої проксі'
         }) },
-        { text: "📊 Мої транзакції", callback_data: JSON.stringify({
+        { text: "📊 Історія", callback_data: JSON.stringify({
           type: 'menu',
-          button: 'Мої проксі'
+          button: 'Історія'
         }) },
       ],
       [{ text: "⚙️ Налаштування", callback_data: JSON.stringify({
