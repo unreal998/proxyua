@@ -83,3 +83,32 @@ export async function getProxyList() {
     })
 
 }
+
+export async function getProxyData(id) {
+    const proxyDataList = ref(database, `proxy/${id}`);
+    return new Promise(function(resolve, reject) {
+        onValue(proxyDataList, (snapshot) => {
+            const data = snapshot.val();
+            resolve(data);
+        }, {
+            onlyOnce: true
+        });
+    })
+
+}
+
+export async function updateProxyData(proxyData, id) {
+    return new Promise(function(resolve, reject) {
+        update(ref(database, `proxy/${id}`), {
+            ...proxyData
+        });
+        const proxyDataList = ref(database, `proxy/${id}`);
+        onValue(proxyDataList, (snapshot) => {
+            const data = snapshot.val();
+            console.log( "==onValue==", data)
+            resolve(data);
+        }, {
+            onlyOnce: true
+        })
+    })
+}

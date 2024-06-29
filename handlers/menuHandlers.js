@@ -39,7 +39,7 @@ export default function menuHandlers(
           callback_data: JSON.stringify({
             type: "proxyMenu",
             id: key,
-            button: element.address,
+            button: proxyListMenu.INFO,
           }),
         };
         const editButton = {

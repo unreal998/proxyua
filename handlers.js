@@ -1,5 +1,5 @@
 import menuHandlers, {menuResponceHandlers} from './handlers/menuHandlers.js';
-import proxyMenuHandlers from './handlers/proxyHandlers.js';
+import proxyMenuHandlers, {proxyMenuResponceHandlers} from './handlers/proxyHandlers.js';
 
 const setupHandlers = (bot, userData, responceMessageAwaiting) => {
   // Обробка натискання кнопок
@@ -23,6 +23,9 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
     switch(responceMessageAwaiting.type) {
       case 'menu':
         menuResponceHandlers(responceMessageAwaiting, bot, msg)
+        break;
+      case 'proxyMenu':
+        proxyMenuResponceHandlers(responceMessageAwaiting, bot, msg)
         break;
       default:
         bot.sendMessage(message.chat.id, 'callback type is missing');
