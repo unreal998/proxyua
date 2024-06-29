@@ -105,7 +105,6 @@ export async function updateProxyData(proxyData, id) {
         const proxyDataList = ref(database, `proxy/${id}`);
         onValue(proxyDataList, (snapshot) => {
             const data = snapshot.val();
-            console.log( "==onValue==", data)
             resolve(data);
         }, {
             onlyOnce: true

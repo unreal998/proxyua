@@ -30,10 +30,10 @@ ${data.status ? '' : `Арендовано: ${data.rentedBy} \n
                 bot.sendMessage(message.chat.id, `Введіть новий логін`);
                 break;
             case proxyListMenu.EDIT_PASSWORD:
-                bot.sendMessage(message.chat.id, `Ви впевнені що хочете видалити ${cbData.button}?`);
+                bot.sendMessage(message.chat.id, `Введіть новий пароль`);
                 break;
             case proxyListMenu.EDIT_ADDRESS:
-                bot.sendMessage(message.chat.id, `Ви впевнені що хочете видалити ${cbData.button}?`);
+                bot.sendMessage(message.chat.id, `Введіть нову адресу`);
                 break;
             default:
                 bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.button}`);
@@ -52,30 +52,29 @@ export function proxyMenuResponceHandlers(responceMessageAwaiting, bot, message)
                 login: message.text,
             }
             updateProxyData(updateLoginData, responceMessageAwaiting.id).then(updData => {
-                console.log("========", updData);
-                bot.sendMessage(message.chat.id, `Логін змінено на: ${data.login}`, createBackToMenuMenu());
+                bot.sendMessage(message.chat.id, `Логін змінено на: ${updData.login}`, createBackToMenuMenu());
             })
         })
         break;
       case proxyListMenu.EDIT_PASSWORD:
-        getProxyData(cbData.id).then(data => {
+        getProxyData(responceMessageAwaiting.id).then(data => {
             const updateLoginData = {
                 ...data,
                 password: message.text
             }
-            updateProxyData(updateLoginData).then(data => {
-                bot.sendMessage(message.chat.id, `Пароль змінено на: ${data.password}`, createBackToMenuMenu());
+            updateProxyData(updateLoginData, responceMessageAwaiting.id).then(updData => {
+                bot.sendMessage(message.chat.id, `Пароль змінено на: ${updData.password}`, createBackToMenuMenu());
             })
         })
         break;
        case proxyListMenu.EDIT_ADDRESS:
-        getProxyData(cbData.id).then(data => {
+        getProxyData(responceMessageAwaiting.id).then(data => {
             const updateLoginData = {
                 ...data,
                 address: message.text
             }
-            updateProxyData(updateLoginData).then(data => {
-                bot.sendMessage(message.chat.id, `Адресу змінено на: ${data.address}`, createBackToMenuMenu());
+            updateProxyData(updateLoginData, responceMessageAwaiting.id).then(updData => {
+                bot.sendMessage(message.chat.id, `Адресу змінено на: ${updData.address}`, createBackToMenuMenu());
             })
         })
         break;

@@ -1,6 +1,6 @@
 
 import menuHandlers, { menuResponceHandlers } from "./handlers/menuHandlers.js";
-import proxyMenuHandlers from "./handlers/proxyHandlers.js";
+import proxyMenuHandlers, { proxyMenuResponceHandlers } from "./handlers/proxyHandlers.js";
 
 
 const setupHandlers = (bot, userData, responceMessageAwaiting) => {
