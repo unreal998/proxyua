@@ -73,7 +73,7 @@ const userMenu = {
 };
 
 // Створення меню з кнопкою "Назад"
-const createBackToMenuMenu = (text) => ({
+const createBackToMenuMenu = () => ({
   reply_markup: {
     inline_keyboard: [
       [
