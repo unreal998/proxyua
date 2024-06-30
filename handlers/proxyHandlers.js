@@ -37,30 +37,61 @@ export default function proxyMenuHandlers(
 Логін: ${data.login} \n
 Пароль: ${data.password} \n
 Статус: ${data.status ? " 🟢" : " 🔴"}\n
-${
-  data.status
-    ? ""
-    : `Арендовано: ${data.rentedBy} \n
-Кінець аренди ${new Date(data.rentEnd).toLocaleString()}`
-}`,
-            createBackToMenuMenu()
-          );
-        });
-        break;
+${data.status ? '' : `Арендовано: ${data.rentedBy} \n
+Кінець аренди ${new Date(data.rentEnd).toLocaleString()}`}`, createBackToMenuMenu());
+                })
+                break;
+            case proxyListMenu.EDIT_LOGIN:
+                bot.sendMessage(message.chat.id, `Введіть новий логін`);
+                break;
+            case proxyListMenu.EDIT_PASSWORD:
+                bot.sendMessage(message.chat.id, `Введіть новий пароль`);
+                break;
+            case proxyListMenu.EDIT_ADDRESS:
+                bot.sendMessage(message.chat.id, `Введіть нову адресу`);
+                break;
+            default:
+                bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.button}`);
+        }
+    } else {
+        bot.sendMessage(message.chat.id, `У вас немає доступу для перегляду`);
+    }
+}
+
+export function proxyMenuResponceHandlers(responceMessageAwaiting, bot, message) {
+    switch (responceMessageAwaiting.lastRequestMessage) {
       case proxyListMenu.EDIT_LOGIN:
-        bot.sendMessage(message.chat.id, `Введіть новий логін`);
+        getProxyData(responceMessageAwaiting.id).then(data => {
+            const updateLoginData = {
+                ...data,
+                login: message.text,
+            }
+            updateProxyData(updateLoginData, responceMessageAwaiting.id).then(updData => {
+                bot.sendMessage(message.chat.id, `Логін змінено на: ${updData.login}`, createBackToMenuMenu());
+            })
+        })
         break;
       case proxyListMenu.EDIT_PASSWORD:
-        bot.sendMessage(
-          message.chat.id,
-          `Ви впевнені що хочете видалити ${cbData.button}?`
-        );
+        getProxyData(responceMessageAwaiting.id).then(data => {
+            const updateLoginData = {
+                ...data,
+                password: message.text
+            }
+            updateProxyData(updateLoginData, responceMessageAwaiting.id).then(updData => {
+                bot.sendMessage(message.chat.id, `Пароль змінено на: ${updData.password}`, createBackToMenuMenu());
+            })
+        })
         break;
-      case proxyListMenu.EDIT_ADDRESS:
-        bot.sendMessage(
-          message.chat.id,
-          `Ви впевнені що хочете видалити ${cbData.button}?`
-        );
+       case proxyListMenu.EDIT_ADDRESS:
+        getProxyData(responceMessageAwaiting.id).then(data => {
+            const updateLoginData = {
+                ...data,
+                address: message.text
+            }
+            updateProxyData(updateLoginData, responceMessageAwaiting.id).then(updData => {
+                bot.sendMessage(message.chat.id, `Адресу змінено на: ${updData.address}`, createBackToMenuMenu());
+            })
+        })
         break;
       default:
         bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.button}`);

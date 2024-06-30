@@ -1,7 +1,7 @@
 import menuHandlers, { menuResponceHandlers } from "./handlers/menuHandlers.js";
-import proxyMenuHandlers from "./handlers/proxyHandlers.js";
+import proxyMenuHandlers, { proxyMenuResponceHandlers } from "./handlers/proxyHandlers.js";
 import { selectedProxyByUser } from "./data/selectedProxyByUser.js";
-import { TOKEN } from "./constants.js"; // Переконайтеся, що цей файл існує і TOKEN вірно заданий
+import { TOKEN } from "./constants.js"; 
 
 const setupHandlers = (bot, userData, responceMessageAwaiting) => {
   // Обробка натискання кнопок
