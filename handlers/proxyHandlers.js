@@ -58,49 +58,6 @@ ${data.status ? '' : `Арендовано: ${data.rentedBy} \n
     }
 }
 
-export function proxyMenuResponceHandlers(responceMessageAwaiting, bot, message) {
-    switch (responceMessageAwaiting.lastRequestMessage) {
-      case proxyListMenu.EDIT_LOGIN:
-        getProxyData(responceMessageAwaiting.id).then(data => {
-            const updateLoginData = {
-                ...data,
-                login: message.text,
-            }
-            updateProxyData(updateLoginData, responceMessageAwaiting.id).then(updData => {
-                bot.sendMessage(message.chat.id, `Логін змінено на: ${updData.login}`, createBackToMenuMenu());
-            })
-        })
-        break;
-      case proxyListMenu.EDIT_PASSWORD:
-        getProxyData(responceMessageAwaiting.id).then(data => {
-            const updateLoginData = {
-                ...data,
-                password: message.text
-            }
-            updateProxyData(updateLoginData, responceMessageAwaiting.id).then(updData => {
-                bot.sendMessage(message.chat.id, `Пароль змінено на: ${updData.password}`, createBackToMenuMenu());
-            })
-        })
-        break;
-       case proxyListMenu.EDIT_ADDRESS:
-        getProxyData(responceMessageAwaiting.id).then(data => {
-            const updateLoginData = {
-                ...data,
-                address: message.text
-            }
-            updateProxyData(updateLoginData, responceMessageAwaiting.id).then(updData => {
-                bot.sendMessage(message.chat.id, `Адресу змінено на: ${updData.address}`, createBackToMenuMenu());
-            })
-        })
-        break;
-      default:
-        bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.button}`);
-    }
-  } else {
-    bot.sendMessage(message.chat.id, `У вас немає доступу для перегляду`);
-  }
-}
-
 export function proxyMenuResponceHandlers(
   responceMessageAwaiting,
   bot,
@@ -115,10 +72,9 @@ export function proxyMenuResponceHandlers(
         };
         updateProxyData(updateLoginData, responceMessageAwaiting.id).then(
           (updData) => {
-            console.log("========", updData);
             bot.sendMessage(
               message.chat.id,
-              `Логін змінено на: ${data.login}`,
+              `Логін змінено на: ${updData.login}`,
               createBackToMenuMenu()
             );
           }
@@ -131,10 +87,10 @@ export function proxyMenuResponceHandlers(
           ...data,
           password: message.text,
         };
-        updateProxyData(updateLoginData).then((data) => {
+        updateProxyData(updateLoginData).then((updData) => {
           bot.sendMessage(
             message.chat.id,
-            `Пароль змінено на: ${data.password}`,
+            `Пароль змінено на: ${updData.password}`,
             createBackToMenuMenu()
           );
         });
@@ -146,10 +102,10 @@ export function proxyMenuResponceHandlers(
           ...data,
           address: message.text,
         };
-        updateProxyData(updateLoginData).then((data) => {
+        updateProxyData(updateLoginData).then((updData) => {
           bot.sendMessage(
             message.chat.id,
-            `Адресу змінено на: ${data.address}`,
+            `Адресу змінено на: ${updData.address}`,
             createBackToMenuMenu()
           );
         });
