@@ -9,6 +9,7 @@ import {
 import { addNewProxyConfig, getProxyList, getActiveTransactionList } from "../database/api.js";
 import { generateProxyListMenu } from "../UI/proxyList.js";
 import { generateTransactionListMenu } from "../UI/transactionList.js";
+import { selectedProxyByUser } from "../data/selectedProxyByUser.js";
 
 export default function menuHandlers(
   cbData,
@@ -229,6 +230,12 @@ export default function menuHandlers(
     const selectedProxy = responceMessageAwaiting.selectedProxy;
     const rentTime = cbData.time;
     const rentPrice = cbData.price;
+
+    selectedProxyByUser.proxyAddress = selectedProxy;
+    selectedProxyByUser.rentTime = rentTime;
+    selectedProxyByUser.price = rentPrice;
+    selectedProxyByUser.timeInMilliseconds = Date.now();
+
     bot.sendMessage(
       message.chat.id,
       `Ви хочете орендувати проксі ${selectedProxy} на ${rentTime} за ${rentPrice} usd?`,
@@ -240,7 +247,7 @@ export default function menuHandlers(
                 text: "Так",
                 callback_data: JSON.stringify({
                   type: "confirmRentYes",
-                  proxyId: selectedProxy.id, // або інший унікальний ідентифікатор
+                  proxyId: selectedProxy.id,
                   time: rentTime,
                   price: rentPrice,
                 }),
@@ -286,7 +293,7 @@ export default function menuHandlers(
     responceMessageAwaiting.selectedProxy = cbData.button;
     bot.sendMessage(
       message.chat.id,
-      `Для оплати проксі ${selectedProxy} на ${rentTime} вам слід сплатити ${rentPrice} \nРеквізити рахунку Бінанс: \n `,
+      `Для оплати проксі ${selectedProxyByUser.proxyAddress} на ${selectedProxyByUser.rentTime} вам слід сплатити ${selectedProxyByUser.price} \nРеквізити рахунку Бінанс: \n `,
       {
         reply_markup: {
           inline_keyboard: [
@@ -303,13 +310,10 @@ export default function menuHandlers(
       }
     );
   } else if (cbData.type === "monobank") {
-    const selectedProxy = responceMessageAwaiting.selectedProxy;
-    const rentTime = cbData.time;
-    const rentPrice = cbData.price;
     responceMessageAwaiting.selectedProxy = cbData.button;
     bot.sendMessage(
       message.chat.id,
-      `Для оплати проксі ${selectedProxy} на ${rentTime} вам слід сплатити ${rentPrice} \nРеквізити рахунку монобанк: \n `,
+      `Для оплати проксі ${selectedProxyByUser.proxyAddress} на ${selectedProxyByUser.rentTime} вам слід сплатити ${selectedProxyByUser.price} usd \nРеквізити рахунку монобанк: \n `,
       {
         reply_markup: {
           inline_keyboard: [
@@ -325,6 +329,9 @@ export default function menuHandlers(
         },
       }
     );
+  } else if (cbData.type === "paid") {
+    responceMessageAwaiting.selectedProxy = cbData.button;
+    bot.sendMessage(message.chat.id, `Прикріпіть, будь-ласка, скрін проплати`);
   } else {
     bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.button}`);
   }
