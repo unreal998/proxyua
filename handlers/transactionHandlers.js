@@ -1,34 +1,25 @@
-
+import { transactionListMenu } from '../UI/dictionary.js';
 
 export default function transactionMenuHandlers(cbData, bot, message, userData, responceMessageAwaiting) {
     if (userData.type === 'admin') {
         responceMessageAwaiting.type = cbData.type;
         responceMessageAwaiting.lastRequestMessage = cbData.button;
+        responceMessageAwaiting.id = cbData.button;
         switch(cbData.button) {
-            case proxyListMenu.EDIT:
-                bot.sendMessage(message.chat.id, `Редагувати`, editProxyMenu);
-                break;
-            case proxyListMenu.REMOVE:
-                bot.sendMessage(message.chat.id, `Ви впевнені що хочете видалити ${cbData.button}?`);
-                break;
-            case proxyListMenu.INFO:
+            case transactionListMenu.INFO:
                 getProxyData(cbData.id).then(data => {
                     bot.sendMessage(message.chat.id, `
-                        Адреса: ${data.address} \n
-Логін: ${data.login} \n
-Пароль: ${data.password} \n
-Статус: ${data.status ? " 🟢" : " 🔴"}\n
-${data.status ? '' : `Арендовано: ${data.rentedBy} \n
-Кінець аренди ${new Date(data.rentEnd).toLocaleString()}`}`, createBackToMenuMenu());
+                        Id: ${data.address} \n
+Сума: ${data.value} \n
+Статус: ${data.status}\n
+Адреса: ${data.proxyAddress}\n
+Тривалість ${new Date(data.timeInMilliseconds).toLocaleString()}`, createBackToMenuMenu());
                 })
                 break;
-            case proxyListMenu.EDIT_LOGIN:
-                bot.sendMessage(message.chat.id, `Введіть новий логін`);
-                break;
-            case proxyListMenu.EDIT_PASSWORD:
+            case transactionListMenu.APPROVE:
                 bot.sendMessage(message.chat.id, `Ви впевнені що хочете видалити ${cbData.button}?`);
                 break;
-            case proxyListMenu.EDIT_ADDRESS:
+            case transactionListMenu.DECLINE:
                 bot.sendMessage(message.chat.id, `Ви впевнені що хочете видалити ${cbData.button}?`);
                 break;
             default:

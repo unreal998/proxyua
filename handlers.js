@@ -1,6 +1,7 @@
 
 import menuHandlers, { menuResponceHandlers } from "./handlers/menuHandlers.js";
 import proxyMenuHandlers, { proxyMenuResponceHandlers } from "./handlers/proxyHandlers.js";
+import transactionMenuHandlers from './handlers/transactionHandlers.js';
 
 
 const setupHandlers = (bot, userData, responceMessageAwaiting) => {
@@ -76,7 +77,10 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
         menuResponceHandlers(responceMessageAwaiting, bot, msg);
         break;
       case 'proxyMenu':
-        proxyMenuResponceHandlers(responceMessageAwaiting, bot, msg)
+        proxyMenuResponceHandlers(responceMessageAwaiting, bot, msg);
+        break;
+      case 'transactionMenu':
+        transactionMenuHandlers(responceMessageAwaiting, bot, msg);
         break;
       default:
         bot.sendMessage(message.chat.id, "callback type is missing");

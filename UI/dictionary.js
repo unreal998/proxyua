@@ -3,6 +3,7 @@ export const menuDictionary = {
   MAIN_MENU: "Головне меню:",
   PROXY_LIST: "Список проксі",
   SETTINGS: "Налаштування",
+  PENDING_TRANSACTIONS: 'Відкриті заявки'
 };
 
 export const proxyListMenu = {
@@ -13,6 +14,12 @@ export const proxyListMenu = {
   EDIT_ADDRESS: "Адресу",
   INFO: ''
 };
+
+export const transactionListMenu = {
+  APPROVE: 'Прийняти',
+  DECLINE: 'Відхилити',
+  INFO: 'Інфо'
+}
 
 export const userMenuDictionary = {
   RENT: "Оренда проксі",

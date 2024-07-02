@@ -111,3 +111,21 @@ export async function updateProxyData(proxyData, id) {
         })
     })
 }
+
+export async function getActiveTransactionList() {
+    const transactionsDataRef = ref(database, `transactions`);
+    return new Promise(function(resolve, reject) {
+        onValue(transactionsDataRef, (snapshot) => {
+            const data = snapshot.val();
+            const openTransactionsList = [];
+            for (const key in data) {
+                const element = data[key];
+                element.id = key;
+                element.status === 'processing' && openTransactionsList.push(element)
+            };
+            resolve(openTransactionsList);
+        }, {
+            onlyOnce: true
+        });
+    })
+}

@@ -3,10 +3,12 @@ import { settingsMenu } from "../UI/settings.js";
 import {
   menuDictionary,
   proxyListMenu,
+  transactionListMenu,
   userMenuDictionary,
 } from "../UI/dictionary.js";
-import { addNewProxyConfig, getProxyList } from "../database/api.js";
+import { addNewProxyConfig, getProxyList, getActiveTransactionList } from "../database/api.js";
 import { generateProxyListMenu } from "../UI/proxyList.js";
+import { generateTransactionListMenu } from "../UI/transactionList.js";
 
 export default function menuHandlers(
   cbData,
@@ -64,8 +66,40 @@ export default function menuHandlers(
         generateProxyListMenu(list)
       );
     });
-  } else if (cbData.button === "Відкриті заявки") {
-    bot.sendMessage(message.chat.id, "Відкриті заявки", createBackToMenuMenu());
+  } else if (cbData.button === menuDictionary.PENDING_TRANSACTIONS) {
+    getActiveTransactionList().then((data) => {
+      const list = [];
+      data.forEach(element => {
+        // const listObject = {
+        //   text: `${element.proxyAddress}`,
+        //   callback_data: JSON.stringify({
+        //     type: "transactionMenu",
+        //     id: element.id,
+        //     button: transactionListMenu.INFO,
+        //   }).slice(0, 64),
+        // };
+        const declineButton = {
+          text: transactionListMenu.DECLINE,
+          callback_data: JSON.stringify({
+            type: "transactionMenu",
+            // id: element.id,
+            button: transactionListMenu.DECLINE,
+          }).slice(0, 64),
+        };
+        const approveButton = {
+          text: transactionListMenu.APPROVE,
+          callback_data: JSON.stringify({
+            type: "transactionMenu",
+            // id: element.id,
+            button: transactionListMenu.APPROVE,
+          }).slice(0, 64),
+        };
+        // list.push([listObject]);
+        list.push([declineButton, approveButton]);
+      });
+
+      bot.sendMessage(message.chat.id, menuDictionary.PENDING_TRANSACTIONS, generateTransactionListMenu(list));
+    })
   } else if (cbData.button === menuDictionary.ADD_PROXY) {
     bot.sendMessage(
       message.chat.id,
