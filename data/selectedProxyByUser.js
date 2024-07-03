@@ -1,12 +1,11 @@
 export const selectedProxyByUser = {
   id: "",
-  value: "",
-  chatId: "", //done
-  photoURL: "", //done
+  chatId: "",
+  photoURL: "",
   status: "processing",
-  proxyAddress: "", //done
-  rentTime: "", //done
-  price: "", //done
-  timeInMilliseconds: null, //done
+  proxyAddress: "",
+  rentTime: "",
+  price: "",
+  timeInMilliseconds: null,
   finishDate: null,
 };
