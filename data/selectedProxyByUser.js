@@ -7,6 +7,6 @@ export const selectedProxyByUser = {
   proxyAddress: "", //done
   rentTime: "", //done
   price: "", //done
-  timeInMilliseconds: null, //done
+  timeStampInMilliseconds: null, //done
   finishDate: null,
 };

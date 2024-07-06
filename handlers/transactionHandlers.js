@@ -1,29 +1,54 @@
 import { transactionListMenu } from '../UI/dictionary.js';
+import { getTransactionData, approveTransaction, declineTransaction } from '../database/api.js';
+import { createBackToMenuMenu } from '../UI/menus.js';
+import { generateTransactionControls } from '../UI/transactionList.js';
 
 export default function transactionMenuHandlers(cbData, bot, message, userData, responceMessageAwaiting) {
     if (userData.type === 'admin') {
         responceMessageAwaiting.type = cbData.type;
-        responceMessageAwaiting.lastRequestMessage = cbData.button;
-        responceMessageAwaiting.id = cbData.button;
-        switch(cbData.button) {
+        responceMessageAwaiting.lastRequestMessage = cbData.btn;
+        responceMessageAwaiting.id = cbData.btn;
+        switch(cbData.btn) {
             case transactionListMenu.INFO:
-                getProxyData(cbData.id).then(data => {
+                getTransactionData(cbData.id).then(data => {
+                    const list = [];
+                    const declineButton = {
+                        text: transactionListMenu.DECLINE,
+                        callback_data: JSON.stringify({
+                            type: "tMenu",
+                            id: data.id,
+                            btn: transactionListMenu.DECLINE,
+                        }),
+                        };
+                    const approveButton = {
+                        text: transactionListMenu.APPROVE,
+                        callback_data: JSON.stringify({
+                            type: "tMenu",
+                            id: data.id,
+                            btn: transactionListMenu.APPROVE,
+                        }),
+                    };
+                    list.push([approveButton, declineButton]);
                     bot.sendMessage(message.chat.id, `
-                        Id: ${data.address} \n
-Сума: ${data.value} \n
+                        Id: ${data.id} \n
+Сума: ${data.price} \n
 Статус: ${data.status}\n
 Адреса: ${data.proxyAddress}\n
-Тривалість ${new Date(data.timeInMilliseconds).toLocaleString()}`, createBackToMenuMenu());
+Тривалість ${new Date(data.rentTime).getHours()} години`, generateTransactionControls(list));
                 })
                 break;
             case transactionListMenu.APPROVE:
-                bot.sendMessage(message.chat.id, `Ви впевнені що хочете видалити ${cbData.button}?`);
+                approveTransaction(cbData.id).then(data => {
+                    bot.sendMessage(message.chat.id, `Заявка прийнята ${data.id}?`, createBackToMenuMenu());
+                });
                 break;
             case transactionListMenu.DECLINE:
-                bot.sendMessage(message.chat.id, `Ви впевнені що хочете видалити ${cbData.button}?`);
+                declineTransaction(cbData.id).then(data => {
+                    bot.sendMessage(message.chat.id, `Заявка відхилина ${data.id}?`, createBackToMenuMenu());
+                });
                 break;
             default:
-                bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.button}`);
+                bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.btn}`);
         }
     } else {
         bot.sendMessage(message.chat.id, `У вас немає доступу для перегляду`);

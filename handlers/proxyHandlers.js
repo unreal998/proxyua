@@ -12,9 +12,9 @@ export default function proxyMenuHandlers(
 ) {
   if (userData.type === "admin") {
     responceMessageAwaiting.type = cbData.type;
-    responceMessageAwaiting.lastRequestMessage = cbData.button;
+    responceMessageAwaiting.lastRequestMessage = cbData.btn;
     responceMessageAwaiting.id = cbData.id;
-    switch (cbData.button) {
+    switch (cbData.btn) {
       case proxyListMenu.EDIT:
         bot.sendMessage(
           message.chat.id,
@@ -51,7 +51,7 @@ ${data.status ? '' : `Арендовано: ${data.rentedBy} \n
                 bot.sendMessage(message.chat.id, `Введіть нову адресу`);
                 break;
             default:
-                bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.button}`);
+                bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.btn}`);
         }
     } else {
         bot.sendMessage(message.chat.id, `У вас немає доступу для перегляду`);

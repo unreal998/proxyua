@@ -37,6 +37,15 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
           responceMessageAwaiting
         );
         break;
+      case 'tMenu':
+        transactionMenuHandlers(
+          parsedData,
+          bot,
+          message,
+          userData,
+          responceMessageAwaiting
+        );
+        break;
       default:
         bot.sendMessage(message.chat.id, "callback type is missing");
     }
@@ -49,9 +58,6 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
         break;
       case 'proxyMenu':
         proxyMenuResponceHandlers(responceMessageAwaiting, bot, msg);
-        break;
-      case 'transactionMenu':
-        transactionMenuHandlers(responceMessageAwaiting, bot, msg);
         break;
       default:
         bot.sendMessage(message.chat.id, "callback type is missing");

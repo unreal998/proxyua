@@ -129,3 +129,33 @@ export async function getActiveTransactionList() {
         });
     })
 }
+
+export async function approveTransaction(id) {
+    return new Promise(function(resolve, reject) {
+        update(ref(database, `transactions/${id}`), {
+            status: 'approved'
+        });
+        const proxyDataList = ref(database, `transactions/${id}`);
+        onValue(proxyDataList, (snapshot) => {
+            const data = snapshot.val();
+            resolve(data);
+        }, {
+            onlyOnce: true
+        })
+    })
+}
+
+export async function declineTransaction(id) {
+    return new Promise(function(resolve, reject) {
+        update(ref(database, `transactions/${id}`), {
+            status: 'decline'
+        });
+        const proxyDataList = ref(database, `transactions/${id}`);
+        onValue(proxyDataList, (snapshot) => {
+            const data = snapshot.val();
+            resolve(data);
+        }, {
+            onlyOnce: true
+        })
+    })
+}
