@@ -6,7 +6,13 @@ import {
   transactionListMenu,
   userMenuDictionary,
 } from "../UI/dictionary.js";
-import { addNewProxyConfig, getProxyList, getActiveTransactionList } from "../database/api.js";
+import {
+  addNewProxyConfig,
+  getProxyList,
+  getTransactionList,
+  getActiveTransactionList,
+  getTransactionData,
+} from "../database/api.js";
 import { generateProxyListMenu } from "../UI/proxyList.js";
 import { generateTransactionListMenu } from "../UI/transactionList.js";
 import { selectedProxyByUser } from "../data/selectedProxyByUser.js";
@@ -70,10 +76,25 @@ export default function menuHandlers(
   } else if (cbData.btn === menuDictionary.PENDING_TRANSACTIONS) {
     getActiveTransactionList().then((data) => {
       const list = [];
-      data.forEach(element => {
-        const listObject = {
-          text: `${element.proxyAddress} - ${new Date(element.rentTime).getHours() > 24 ? 
-            new Date(element.rentTime).getDay() + 'днів' : new Date(element.rentTime).getHours() + 'годин'}`,
+      data.forEach((element) => {
+        // const listObject = {
+        //   text: `${element.proxyAddress}`,
+        //   callback_data: JSON.stringify({
+        //     type: "transactionMenu",
+        //     id: element.id,
+        //     button: transactionListMenu.INFO,
+        //   }).slice(0, 64),
+        // };
+        const declineButton = {
+          text: transactionListMenu.DECLINE,
+          callback_data: JSON.stringify({
+            type: "transactionMenu",
+            // id: element.id,
+            button: transactionListMenu.DECLINE,
+          }).slice(0, 64),
+        };
+        const approveButton = {
+          text: transactionListMenu.APPROVE,
           callback_data: JSON.stringify({
             type: "tMenu",
             id: element.id,
@@ -82,10 +103,13 @@ export default function menuHandlers(
         };
         list.push([listObject]);
       });
-
-      bot.sendMessage(message.chat.id, menuDictionary.PENDING_TRANSACTIONS, generateTransactionListMenu(list));
-    })
-  } else if (cbData.btn === menuDictionary.ADD_PROXY) {
+      bot.sendMessage(
+        message.chat.id,
+        menuDictionary.PENDING_TRANSACTIONS,
+        generateTransactionListMenu(list)
+      );
+    });
+  } else if (cbData.button === menuDictionary.ADD_PROXY) {
     bot.sendMessage(
       message.chat.id,
       "Введіть адресу проксі",
@@ -132,8 +156,47 @@ export default function menuHandlers(
     );
   } else if (cbData.btn === "Мої проксі") {
     bot.sendMessage(message.chat.id, "Мої проксі", createBackToMenuMenu());
-  } else if (cbData.btn === "Історія") {
-    bot.sendMessage(message.chat.id, "Історія", createBackToMenuMenu());
+  } else if (cbData.button === "Історія") {
+    getTransactionList().then((data) => {
+      const list = [];
+      for (const key in data) {
+        const element = data[key];
+        const listObject = {
+          text: `${element.proxyAddress} - ${element.rentTime}`,
+          callback_data: JSON.stringify({
+            type: "transactionInfo",
+            id: key,
+            button: "transactionInfo",
+          }).slice(0, 64),
+        };
+        list.push([listObject]);
+      }
+
+      bot.sendMessage(message.chat.id, "Історія ваших орендованих проксі", {
+        reply_markup: {
+          inline_keyboard: [
+            ...list,
+            [
+              {
+                text: `🔙 ${menuDictionary.MAIN_MENU}`,
+                callback_data: JSON.stringify({
+                  type: "menu",
+                  button: menuDictionary.MAIN_MENU,
+                }).slice(0, 64),
+              },
+            ],
+          ],
+        },
+      });
+    });
+  } else if (cbData.type === "transactionInfo") {
+    getTransactionData(cbData.id).then((transaction) => {
+      bot.sendMessage(
+        message.chat.id,
+        `Проксі: ${transaction.proxyAddress}\nСтатус: ${transaction.status}\nВартість: ${transaction.price}\nЧас оренди: ${transaction.rentTime}\nСилка на фото оплати: ${transaction.photoURI}`,
+        createBackToMenuMenu()
+      );
+    });
   } else if (cbData.type === "proxyRent") {
     responceMessageAwaiting.selectedProxy = cbData.btn;
     bot.sendMessage(
@@ -271,10 +334,10 @@ export default function menuHandlers(
       },
     });
   } else if (cbData.type === "binance") {
-    responceMessageAwaiting.selectedProxy = cbData.btn;
+    responceMessageAwaiting.selectedProxy = cbData.button;
     bot.sendMessage(
       message.chat.id,
-      `Для оплати проксі ${selectedProxyByUser.proxyAddress} на ${selectedProxyByUser.rentTime} вам слід сплатити ${selectedProxyByUser.price} \nРеквізити рахунку Бінанс: \n `,
+      `Для оплати проксі ${selectedProxyByUser.proxyAddress} на ${selectedProxyByUser.rentTime} вам слід сплатити ${selectedProxyByUser.price} usd \nРеквізити рахунку Бінанс: \n `,
       {
         reply_markup: {
           inline_keyboard: [

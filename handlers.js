@@ -1,12 +1,17 @@
 import menuHandlers, { menuResponceHandlers } from "./handlers/menuHandlers.js";
-import proxyMenuHandlers, { proxyMenuResponceHandlers } from "./handlers/proxyHandlers.js";
-import transactionMenuHandlers from './handlers/transactionHandlers.js';
+import proxyMenuHandlers, {
+  proxyMenuResponceHandlers,
+} from "./handlers/proxyHandlers.js";
+import transactionMenuHandlers from "./handlers/transactionHandlers.js";
+import { addNewTransaction } from "./database/api.js";
 
 import { selectedProxyByUser } from "./data/selectedProxyByUser.js";
-import { TOKEN } from "./constants.js"; 
+import { TOKEN } from "./constants.js";
+
+import { v4 as uuidv4 } from "uuid";
+import { menuDictionary } from "./UI/dictionary.js";
 
 const setupHandlers = (bot, userData, responceMessageAwaiting) => {
-  // Обробка натискання кнопок
   bot.on("callback_query", (callbackQuery) => {
     const message = callbackQuery.message;
     const cbData = callbackQuery.data;
@@ -29,6 +34,7 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
       case "binance":
       case "monobank":
       case "paid":
+      case "transactionInfo":
         menuHandlers(
           parsedData,
           bot,
@@ -56,8 +62,11 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
       case "menu":
         menuResponceHandlers(responceMessageAwaiting, bot, msg);
         break;
-      case 'proxyMenu':
+      case "proxyMenu":
         proxyMenuResponceHandlers(responceMessageAwaiting, bot, msg);
+        break;
+      case "transactionMenu":
+        transactionMenuHandlers(responceMessageAwaiting, bot, msg);
         break;
       default:
         bot.sendMessage(message.chat.id, "callback type is missing");
@@ -76,10 +85,26 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
 
           bot.sendMessage(
             msg.chat.id,
-            "Скрін проплати отримано. Дякуємо! \nСтатус вашої заявки - в очікуванні"
+            "Скрін проплати отримано. Дякуємо! \nСтатус вашої заявки - в очікуванні",
+            {
+              reply_markup: {
+                inline_keyboard: [
+                  [
+                    {
+                      text: `🔙 ${menuDictionary.MAIN_MENU}`,
+                      callback_data: JSON.stringify({
+                        type: "menu",
+                        button: menuDictionary.MAIN_MENU,
+                      }).slice(0, 64),
+                    },
+                  ],
+                ],
+              },
+            }
           );
+          selectedProxyByUser.id = selectedProxyByUser.id = uuidv4();
 
-          console.log(selectedProxyByUser);
+          addNewTransaction(selectedProxyByUser);
         })
         .catch((error) => {
           console.error("Помилка при отриманні файлу:", error);
