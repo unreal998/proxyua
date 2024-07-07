@@ -6,17 +6,17 @@ export const settingsMenu = {
             text: "🏦 Конфігурація Монобанка",
             callback_data: JSON.stringify({
                 type: 'menu',
-                button: "Конфігурація Монобанка"
+                btn: "Конфігурація Монобанка"
               }),
           },
           { text: "💳 Конфігурація Trust", callback_data: JSON.stringify({
             type: 'menu',
-            button: "Конфігурація Trust"
+            btn: "Конфігурація Trust"
           }) },
         ],
         [{ text: "🔙 Назад", callback_data: JSON.stringify({
             type: 'menu',
-            button: "Назад"
+            btn: "Назад"
           })}],
       ],
     },

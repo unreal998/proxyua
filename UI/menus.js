@@ -8,30 +8,30 @@ const adminMenu = {
           text: `🌐 ${menuDictionary.PROXY_LIST}`,
           callback_data: JSON.stringify({
             type: "menu",
-            button: menuDictionary.PROXY_LIST,
+            btn: menuDictionary.PROXY_LIST,
           }),
         },
         {
           text: `➕ ${menuDictionary.ADD_PROXY}`,
           callback_data: JSON.stringify({
             type: "menu",
-            button: menuDictionary.ADD_PROXY,
+            btn: menuDictionary.ADD_PROXY,
           }),
         },
       ],
       [
         {
-          text: "📋 Відкриті заявки",
+          text: `📋 ${menuDictionary.PENDING_TRANSACTIONS}`,
           callback_data: JSON.stringify({
             type: "menu",
-            button: "Відкриті заявки",
+            btn: menuDictionary.PENDING_TRANSACTIONS,
           }),
         },
         {
           text: `⚙️ ${menuDictionary.SETTINGS}`,
           callback_data: JSON.stringify({
             type: "menu",
-            button: menuDictionary.SETTINGS,
+            btn: menuDictionary.SETTINGS,
           }),
         },
       ],
@@ -48,14 +48,14 @@ const userMenu = {
           text: `📡 ${userMenuDictionary.RENT}`,
           callback_data: JSON.stringify({
             type: "menu",
-            button: `${userMenuDictionary.RENT}`,
+            btn: `${userMenuDictionary.RENT}`,
           }),
         },
         {
           text: `📊 Історія`,
           callback_data: JSON.stringify({
             type: "menu",
-            button: "Історія",
+            btn: "Історія",
           }),
         },
       ],
@@ -64,7 +64,7 @@ const userMenu = {
           text: `⚙️ Налаштування`,
           callback_data: JSON.stringify({
             type: "menu",
-            button: "Мої проксі",
+            btn: "Мої проксі",
           }),
         },
       ],
@@ -81,7 +81,7 @@ const createBackToMenuMenu = () => ({
           text: `🔙 ${menuDictionary.MAIN_MENU}`,
           callback_data: JSON.stringify({
             type: "menu",
-            button: menuDictionary.MAIN_MENU,
+            btn: menuDictionary.MAIN_MENU,
           }),
         },
       ],

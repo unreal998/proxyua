@@ -43,6 +43,15 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
           responceMessageAwaiting
         );
         break;
+      case 'tMenu':
+        transactionMenuHandlers(
+          parsedData,
+          bot,
+          message,
+          userData,
+          responceMessageAwaiting
+        );
+        break;
       default:
         bot.sendMessage(message.chat.id, "callback type is missing");
     }
