@@ -26,3 +26,9 @@ export const userMenuDictionary = {
   HISTORY: "Історія",
   SETTINGS: "Налаштування",
 };
+
+export const settingsMenuDictionary = {
+  MONOBANK_SETTINGS: 'Монобанк',
+  TRUST_SETTINGS: 'Trust',
+  ADD_NEW_ADMIN: 'Додати адміна'
+}

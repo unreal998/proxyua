@@ -1,5 +1,5 @@
 import { adminMenu, createBackToMenuMenu, userMenu } from "../UI/menus.js";
-import { settingsMenu } from "../UI/settings.js";
+import { adminSettingsMenu } from "../UI/settings.js";
 import {
   menuDictionary,
   proxyListMenu,
@@ -21,9 +21,7 @@ export default function menuHandlers(
   responceMessageAwaiting.type = "menu";
   responceMessageAwaiting.lastRequestMessage = cbData.btn;
 
-  if (cbData.btn === menuDictionary.SETTINGS) {
-    bot.sendMessage(message.chat.id, settingsMenu.text, settingsMenu);
-  } else if (cbData.btn === menuDictionary.MAIN_MENU) {
+  if (cbData.btn === menuDictionary.MAIN_MENU) {
     if (userData.type === "admin") {
       bot.sendMessage(message.chat.id, menuDictionary.MAIN_MENU, adminMenu);
     } else {
@@ -124,16 +122,16 @@ export default function menuHandlers(
         },
       });
     });
-  } else if (cbData.btn === "Поповнити гаманець") {
-    bot.sendMessage(
-      message.chat.id,
-      "Поповнити гаманець",
-      createBackToMenuMenu()
-    );
   } else if (cbData.btn === "Мої проксі") {
     bot.sendMessage(message.chat.id, "Мої проксі", createBackToMenuMenu());
   } else if (cbData.btn === "Історія") {
     bot.sendMessage(message.chat.id, "Історія", createBackToMenuMenu());
+  } else if (cbData.btn === menuDictionary.SETTINGS) {
+    if (userData.type === "admin") {
+      bot.sendMessage(message.chat.id, menuDictionary.SETTINGS, adminSettingsMenu);
+    } else {
+      bot.sendMessage(message.chat.id, menuDictionary.MAIN_MENU, userMenu);
+    }
   } else if (cbData.type === "proxyRent") {
     responceMessageAwaiting.selectedProxy = cbData.btn;
     bot.sendMessage(

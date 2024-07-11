@@ -1,6 +1,7 @@
 import menuHandlers, { menuResponceHandlers } from "./handlers/menuHandlers.js";
 import proxyMenuHandlers, { proxyMenuResponceHandlers } from "./handlers/proxyHandlers.js";
 import transactionMenuHandlers from './handlers/transactionHandlers.js';
+import settingsHandlers, { settingsResponceHandlers } from './handlers/settingsHandlers.js';
 
 import { selectedProxyByUser } from "./data/selectedProxyByUser.js";
 import { TOKEN } from "./constants.js"; 
@@ -46,6 +47,13 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
           responceMessageAwaiting
         );
         break;
+      case 'smenu':
+        settingsHandlers(parsedData,
+          bot,
+          message,
+          userData,
+          responceMessageAwaiting); 
+          break;
       default:
         bot.sendMessage(message.chat.id, "callback type is missing");
     }
@@ -58,6 +66,9 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
         break;
       case 'proxyMenu':
         proxyMenuResponceHandlers(responceMessageAwaiting, bot, msg);
+        break;
+      case 'smenu':
+        settingsResponceHandlers(responceMessageAwaiting, bot, msg);
         break;
       default:
         bot.sendMessage(message.chat.id, "callback type is missing");

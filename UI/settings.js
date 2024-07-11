@@ -1,24 +1,31 @@
-export const settingsMenu = {
+import { settingsMenuDictionary } from "./dictionary.js";
+
+export const adminSettingsMenu = {
     reply_markup: {
       inline_keyboard: [
         [
           {
-            text: "🏦 Конфігурація Монобанка",
-            callback_data: JSON.stringify({
-                type: 'menu',
-                btn: "Конфігурація Монобанка"
+            text: `🏦 ${settingsMenuDictionary.MONOBANK_SETTINGS}`, callback_data: JSON.stringify({
+                type: 'smenu',
+                btn: `${settingsMenuDictionary.MONOBANK_SETTINGS}`
               }),
           },
-          { text: "💳 Конфігурація Trust", callback_data: JSON.stringify({
-            type: 'menu',
-            btn: "Конфігурація Trust"
-          }) },
+          { text: `💳 ${settingsMenuDictionary.TRUST_SETTINGS}`, callback_data: JSON.stringify({
+              type: 'smenu',
+              btn: `${settingsMenuDictionary.TRUST_SETTINGS}`
+            }), 
+          },
+          { text: `💳 ${settingsMenuDictionary.ADD_NEW_ADMIN}`, callback_data: 
+              JSON.stringify({
+                type: 'smenu',
+                btn: `${settingsMenuDictionary.ADD_NEW_ADMIN}`
+              }), 
+          },
         ],
         [{ text: "🔙 Назад", callback_data: JSON.stringify({
             type: 'menu',
             btn: "Назад"
           })}],
       ],
-    },
-    text: "Ви вибрали налаштування",
+    }
   };

@@ -26,6 +26,26 @@ export async function addNewUser(msg) {
     Promise.resolve(userData);
 }
 
+export async function updateUserData(userName) {
+    return new Promise(function(resolve, reject) {
+        const proxyDataList = ref(database, `users`);
+        onValue(proxyDataList, (snapshot) => {
+            const data = snapshot.val();
+            for (const key in data) {
+                if (data[key].userName === userName) {
+                    update(ref(database, `users/${data[key].id}`), {
+                        type: 'admin'
+                    });
+                    resolve(data[key])
+                }
+            }
+            reject('not find')
+        }, {
+            onlyOnce: true
+        })
+    })
+}
+
 export async function addNewTransaction(transactionData) {
     set(ref(database, `transactions/${transactionData.id}`), transactionData);
     Promise.resolve(transactionData);
