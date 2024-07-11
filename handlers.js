@@ -73,7 +73,7 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
         break;
       case 'smenu':
         settingsResponceHandlers(responceMessageAwaiting, bot, msg);
-      case "transactionMenu":
+      case "tMenu":
         transactionMenuHandlers(responceMessageAwaiting, bot, msg);
         break;
       default:
@@ -102,8 +102,8 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
                       text: `🔙 ${menuDictionary.MAIN_MENU}`,
                       callback_data: JSON.stringify({
                         type: "menu",
-                        button: menuDictionary.MAIN_MENU,
-                      }).slice(0, 64),
+                        btn: menuDictionary.MAIN_MENU,
+                      }),
                     },
                   ],
                 ],

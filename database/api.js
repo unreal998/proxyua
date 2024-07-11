@@ -1,4 +1,5 @@
-import { ref, onValue, set, update, remove} from "firebase/database";
+import { ref, onValue, set, update} from "firebase/database";
+import { settingsMenuDictionary } from '../UI/dictionary.js';
 import database from "./index.js";
 
 export async function authorization(chatId) {
@@ -45,6 +46,18 @@ export async function updateUserData(userName) {
         })
     })
 }
+
+export async function updateWalletDataData(message, type) {
+    return new Promise(function(resolve, reject) {
+            update(ref(database, `wallet/${type === settingsMenuDictionary.TRUST_SETTINGS ? 'Trust' : 'Monobank'}`), {
+                value: message
+            });
+            resolve(data[key])
+        }, {
+            onlyOnce: true
+        })
+}
+
 
 export async function addNewTransaction(transactionData) {
     set(ref(database, `transactions/${transactionData.id}`), transactionData);

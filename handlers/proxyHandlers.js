@@ -51,7 +51,7 @@ ${data.status ? '' : `Арендовано: ${data.rentedBy} \n
                 bot.sendMessage(message.chat.id, `Введіть нову адресу`);
                 break;
             default:
-                bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.btn}`);
+                bot.sendMessage(message.chat.id, `Ви нажали proxy кнопку: ${cbData.btn}`);
         }
     } else {
         bot.sendMessage(message.chat.id, `У вас немає доступу для перегляду`);

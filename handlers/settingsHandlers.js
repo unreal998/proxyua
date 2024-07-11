@@ -1,5 +1,5 @@
 import { settingsMenuDictionary } from '../UI/dictionary.js';
-import { updateUserData } from '../database/api.js';
+import { updateUserData, updateWalletDataData } from '../database/api.js';
 import { createBackToMenuMenu } from '../UI/menus.js';
 
 export default function settingsHandlers(cbData, bot, message, userData, responceMessageAwaiting) {
@@ -18,7 +18,7 @@ export default function settingsHandlers(cbData, bot, message, userData, responc
                 bot.sendMessage(message.chat.id, `Введіть номер карти`, createBackToMenuMenu());
                 break;
             default:
-                bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.btn}`);
+                bot.sendMessage(message.chat.id, `Ви нажали settings кнопку: ${cbData.btn}`);
         }
     } else {
         bot.sendMessage(message.chat.id, `У вас немає доступу для перегляду`);
@@ -41,6 +41,16 @@ export function settingsResponceHandlers(responceMessageAwaiting, bot, message) 
                 createBackToMenuMenu()
             );
           });
+        break;
+      case settingsMenuDictionary.TRUST_SETTINGS:
+      case settingsMenuDictionary.MONOBANK_SETTINGS:
+        updateWalletDataData(message.text).then((data) => {
+            bot.sendMessage(
+                message.chat.id,
+                "Дані оновлено",
+                createBackToMenuMenu()
+            );
+        });
         break;
       default:
         bot.sendMessage(message.chat.id, "unknown text responce");

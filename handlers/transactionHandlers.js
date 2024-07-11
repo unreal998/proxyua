@@ -48,7 +48,7 @@ export default function transactionMenuHandlers(cbData, bot, message, userData, 
                 });
                 break;
             default:
-                bot.sendMessage(message.chat.id, `Ви нажали кнопку: ${cbData.btn}`);
+                bot.sendMessage(message.chat.id, `Ви нажали transaction кнопку: ${cbData.btn}`);
         }
     } else {
         bot.sendMessage(message.chat.id, `У вас немає доступу для перегляду`);
