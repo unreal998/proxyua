@@ -5,7 +5,7 @@ import {
   proxyListMenu,
   transactionListMenu,
   userMenuDictionary,
-  rentMenuDictionary
+  rentMenuDictionary,
 } from "../UI/dictionary.js";
 import {
   addNewProxyConfig,
@@ -102,7 +102,7 @@ export default function menuHandlers(
       for (const key in data) {
         if (data[key].status) {
           availableProxies.push({
-            text: data[key].address,
+            text: `🖥️  ${data[key].address}`,
             callback_data: JSON.stringify({
               type: "rent",
               ad: data[key].address,
@@ -112,7 +112,7 @@ export default function menuHandlers(
         }
       }
       const proxyButtons = availableProxies.map((proxy) => [proxy]);
-      bot.sendMessage(message.chat.id, "Доступні проксі", {
+      bot.sendMessage(message.chat.id, userMenuDictionary.FREE, {
         reply_markup: {
           inline_keyboard: [
             ...proxyButtons,
@@ -133,7 +133,11 @@ export default function menuHandlers(
     bot.sendMessage(message.chat.id, "Мої проксі", createBackToMenuMenu());
   } else if (cbData.btn === menuDictionary.SETTINGS) {
     if (userData.type === "admin") {
-      bot.sendMessage(message.chat.id, menuDictionary.SETTINGS, adminSettingsMenu);
+      bot.sendMessage(
+        message.chat.id,
+        menuDictionary.SETTINGS,
+        adminSettingsMenu
+      );
     } else {
       bot.sendMessage(message.chat.id, menuDictionary.MAIN_MENU, userMenu);
     }
