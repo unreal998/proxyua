@@ -1,16 +1,10 @@
 import menuHandlers, { menuResponceHandlers } from "./handlers/menuHandlers.js";
 import proxyMenuHandlers, { proxyMenuResponceHandlers } from "./handlers/proxyHandlers.js";
 import transactionMenuHandlers from './handlers/transactionHandlers.js';
+import proxyRentHandlers, { proxyRentResponceHandlers } from './handlers/proxyRentHandlers.js';
 import settingsHandlers, { settingsResponceHandlers } from './handlers/settingsHandlers.js';
-import { addNewTransaction } from "./database/api.js";
 
-import { selectedProxyByUser } from "./data/selectedProxyByUser.js";
-import { TOKEN } from "./constants.js";
-
-import { v4 as uuidv4 } from "uuid";
-import { menuDictionary } from "./UI/dictionary.js";
-
-const setupHandlers = (bot, userData, responceMessageAwaiting) => {
+const setupHandlers = (bot, userData, responceMessageAwaiting, selectedProxyByUser) => {
   bot.on("callback_query", (callbackQuery) => {
     const message = callbackQuery.message;
     const cbData = callbackQuery.data;
@@ -27,19 +21,22 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
         );
         break;
       case "menu":
-      case "proxyRent":
-      case "rentTime":
-      case "confirmRentYes":
-      case "binance":
-      case "monobank":
-      case "paid":
-      case "transactionInfo":
         menuHandlers(
           parsedData,
           bot,
           message,
           userData,
           responceMessageAwaiting
+        );
+        break;
+      case "rent":
+        proxyRentHandlers(
+          parsedData,
+          bot,
+          message,
+          userData,
+          responceMessageAwaiting,
+          selectedProxyByUser
         );
         break;
       case 'tMenu':
@@ -76,47 +73,11 @@ const setupHandlers = (bot, userData, responceMessageAwaiting) => {
       case "tMenu":
         transactionMenuHandlers(responceMessageAwaiting, bot, msg);
         break;
+      case "rent":
+        proxyRentResponceHandlers(responceMessageAwaiting, bot, msg, selectedProxyByUser);
+        break;
       default:
         bot.sendMessage(message.chat.id, "callback type is missing");
-    }
-
-    if (msg.photo) {
-      const fileId = msg.photo[msg.photo.length - 1].file_id;
-
-      bot
-        .getFile(fileId)
-        .then((file) => {
-          const filePath = file.file_path;
-          const fileUrl = `https://api.telegram.org/file/bot${TOKEN}/${filePath}`;
-
-          selectedProxyByUser.photoURL = fileUrl;
-
-          bot.sendMessage(
-            msg.chat.id,
-            "Скрін проплати отримано. Дякуємо! \nСтатус вашої заявки - в очікуванні",
-            {
-              reply_markup: {
-                inline_keyboard: [
-                  [
-                    {
-                      text: `🔙 ${menuDictionary.MAIN_MENU}`,
-                      callback_data: JSON.stringify({
-                        type: "menu",
-                        btn: menuDictionary.MAIN_MENU,
-                      }),
-                    },
-                  ],
-                ],
-              },
-            }
-          );
-          selectedProxyByUser.id = selectedProxyByUser.id = uuidv4();
-
-          addNewTransaction(selectedProxyByUser);
-        })
-        .catch((error) => {
-          console.error("Помилка при отриманні файлу:", error);
-        });
     }
   });
 };

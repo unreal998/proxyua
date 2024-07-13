@@ -3,13 +3,11 @@ import setupHandlers from "./handlers.js";
 import { authorization, addNewUser } from "./database/api.js";
 import { userMenu, adminMenu } from "./UI/menus.js";
 import { menuDictionary } from "./UI/dictionary.js";
-import { selectedProxyByUser } from "./data/selectedProxyByUser.js";
 
 class ProxyUABot {
   bot;
   userData;
-  responseAwaiting;
-  selectedProxy;
+  selectedProxyByUser;
 
   constructor() {
     this.bot = bot;
@@ -17,6 +15,17 @@ class ProxyUABot {
       type: "",
       lastRequestMessage: "",
     };
+    this.selectedProxyByUser = {
+      id: "",
+      chatId: "",
+      photoURL: "",
+      status: "processing",
+      proxyAddress: "",
+      rentTime: "",
+      price: "",
+      timeInMilliseconds: null,
+      finishDate: null,
+    }
   }
 
   start() {
@@ -33,7 +42,7 @@ class ProxyUABot {
               adminMenu
             );
           } else {
-            selectedProxyByUser.chatId = chatId;
+            this.selectedProxyByUser.chatId = chatId;
             this.bot.sendMessage(
               chatId,
               `Привіт ${userFirstName}\n${menuDictionary.MAIN_MENU}`,
@@ -54,7 +63,7 @@ class ProxyUABot {
           this.bot,
           this.userData,
           this.responseMessageAwaiting,
-          this.selectedProxy
+          this.selectedProxyByUser
         );
       });
     });

@@ -32,3 +32,11 @@ export const settingsMenuDictionary = {
   TRUST_SETTINGS: 'Trust',
   ADD_NEW_ADMIN: 'Додати адміна'
 }
+
+export const rentMenuDictionary = {
+  RENT_TIME: 'rentTime',
+  RENT_ADDRESS: 'rAddress',
+  BINANCE: "Binance",
+  MONOBANK: "Monobank",
+  PAID: "paid"
+}

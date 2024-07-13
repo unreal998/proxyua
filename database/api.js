@@ -29,8 +29,8 @@ export async function addNewUser(msg) {
 
 export async function updateUserData(userName) {
     return new Promise(function(resolve, reject) {
-        const proxyDataList = ref(database, `users`);
-        onValue(proxyDataList, (snapshot) => {
+        const userDataList = ref(database, `users`);
+        onValue(userDataList, (snapshot) => {
             const data = snapshot.val();
             for (const key in data) {
                 if (data[key].userName === userName) {
@@ -60,8 +60,17 @@ export async function updateWalletDataData(message, type) {
 
 
 export async function addNewTransaction(transactionData) {
-    set(ref(database, `transactions/${transactionData.id}`), transactionData);
-    Promise.resolve(transactionData);
+    return new Promise(function(resolve, reject) {
+        set(ref(database, `transactions/${transactionData.id}`), transactionData);
+        resolve(transactionData);
+    })
+}
+
+export async function notifyAdmins(transactionData) {
+    return new Promise(function(resolve, reject) {
+        set(ref(database, `transactions/${transactionData.id}`), transactionData);
+        resolve(transactionData);
+    })
 }
 
 export async function getTransactionData(transactionId) {

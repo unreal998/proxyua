@@ -5,6 +5,7 @@ import {
   proxyListMenu,
   transactionListMenu,
   userMenuDictionary,
+  rentMenuDictionary
 } from "../UI/dictionary.js";
 import {
   addNewProxyConfig,
@@ -15,7 +16,6 @@ import {
 } from "../database/api.js";
 import { generateProxyListMenu } from "../UI/proxyList.js";
 import { generateTransactionListMenu } from "../UI/transactionList.js";
-import { selectedProxyByUser } from "../data/selectedProxyByUser.js";
 
 export default function menuHandlers(
   cbData,
@@ -105,9 +105,9 @@ export default function menuHandlers(
           availableProxies.push({
             text: data[key].address,
             callback_data: JSON.stringify({
-              type: "proxyRent",
-              id: key,
-              btn: data[key].address,
+              type: "rent",
+              ad: data[key].address,
+              btn: rentMenuDictionary.RENT_ADDRESS,
             }),
           });
         }
@@ -179,185 +179,6 @@ export default function menuHandlers(
         createBackToMenuMenu()
       );
     });
-  } else if (cbData.type === "proxyRent") {
-    responceMessageAwaiting.selectedProxy = cbData.btn;
-    bot.sendMessage(
-      message.chat.id,
-      "На скільки часу ви хочете орендувати проксі?",
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: "30 хв. - 0.5 usd",
-                callback_data: JSON.stringify({
-                  type: "rentTime",
-                  time: "30 хвилин",
-                  price: 0.5,
-                }),
-              },
-              {
-                text: "1 год. - 1 usd",
-                callback_data: JSON.stringify({
-                  type: "rentTime",
-                  time: "1 годину",
-                  price: 1,
-                }),
-              },
-            ],
-            [
-              {
-                text: "12 год. - 7 usd",
-                callback_data: JSON.stringify({
-                  type: "rentTime",
-                  time: "12 годин",
-                  price: 7,
-                }),
-              },
-              {
-                text: "24 год. - 24 usd",
-                callback_data: JSON.stringify({
-                  type: "rentTime",
-                  time: "24 години",
-                  price: 24,
-                }),
-              },
-            ],
-            [
-              {
-                text: "3 дні - 50 usd",
-                callback_data: JSON.stringify({
-                  type: "rentTime",
-                  time: "3 дні",
-                  price: 50,
-                }),
-              },
-              {
-                text: "7 днів - 100 usd",
-                callback_data: JSON.stringify({
-                  type: "rentTime",
-                  time: "7 днів",
-                  price: 100,
-                }),
-              },
-            ],
-            [
-              {
-                text: "30 днів - 300 usd",
-                callback_data: JSON.stringify({
-                  type: "rentTime",
-                  time: "30 днів",
-                  price: 300,
-                }),
-              },
-            ],
-          ],
-        },
-      }
-    );
-  } else if (cbData.type === "rentTime") {
-    const selectedProxy = responceMessageAwaiting.selectedProxy;
-    const rentTime = cbData.time;
-    const rentPrice = cbData.price;
-
-    selectedProxyByUser.proxyAddress = selectedProxy;
-    selectedProxyByUser.rentTime = rentTime;
-    selectedProxyByUser.price = rentPrice;
-    selectedProxyByUser.timeStampInMilliseconds = Date.now();
-
-    bot.sendMessage(
-      message.chat.id,
-      `Ви хочете орендувати проксі ${selectedProxy} на ${rentTime} за ${rentPrice} usd?`,
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: "Так",
-                callback_data: JSON.stringify({
-                  type: "confirmRentYes",
-                  proxyId: selectedProxy.id,
-                  time: rentTime,
-                  price: rentPrice,
-                }),
-              },
-              {
-                text: "Ні",
-                callback_data: JSON.stringify({
-                  type: "menu",
-                  btn: menuDictionary.MAIN_MENU,
-                }),
-              },
-            ],
-          ],
-        },
-      }
-    );
-  } else if (cbData.type === "confirmRentYes") {
-    responceMessageAwaiting.selectedProxy = cbData.btn;
-    bot.sendMessage(message.chat.id, "Виберіть спосіб оплати", {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: "Бінанс",
-              callback_data: JSON.stringify({
-                type: "binance",
-              }),
-            },
-            {
-              text: "Монобанк",
-              callback_data: JSON.stringify({
-                type: "monobank",
-              }),
-            },
-          ],
-        ],
-      },
-    });
-  } else if (cbData.type === "binance") {
-    responceMessageAwaiting.selectedProxy = cbData.btn;
-    bot.sendMessage(
-      message.chat.id,
-      `Для оплати проксі ${selectedProxyByUser.proxyAddress} на ${selectedProxyByUser.rentTime} вам слід сплатити ${selectedProxyByUser.price} usd \nРеквізити рахунку Бінанс: \n `,
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: "Сплатив",
-                callback_data: JSON.stringify({
-                  type: "paid",
-                }),
-              },
-            ],
-          ],
-        },
-      }
-    );
-  } else if (cbData.type === "monobank") {
-    responceMessageAwaiting.selectedProxy = cbData.btn;
-    bot.sendMessage(
-      message.chat.id,
-      `Для оплати проксі ${selectedProxyByUser.proxyAddress} на ${selectedProxyByUser.rentTime} вам слід сплатити ${selectedProxyByUser.price} usd \nРеквізити рахунку монобанк: \n `,
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: "Сплатив",
-                callback_data: JSON.stringify({
-                  type: "paid",
-                }),
-              },
-            ],
-          ],
-        },
-      }
-    );
-  } else if (cbData.type === "paid") {
-    responceMessageAwaiting.selectedProxy = cbData.btn;
-    bot.sendMessage(message.chat.id, `Прикріпіть, будь-ласка, скрін проплати`);
   } else {
     bot.sendMessage(message.chat.id, `Ви нажали menu кнопку: ${cbData.btn}`);
   }
