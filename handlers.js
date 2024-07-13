@@ -61,23 +61,25 @@ const setupHandlers = (bot, userData, responceMessageAwaiting, selectedProxyByUs
   });
 
   bot.on("message", (msg) => {
-    switch (responceMessageAwaiting.type) {
-      case "menu":
-        menuResponceHandlers(responceMessageAwaiting, bot, msg);
-        break;
-      case "proxyMenu":
-        proxyMenuResponceHandlers(responceMessageAwaiting, bot, msg);
-        break;
-      case 'smenu':
-        settingsResponceHandlers(responceMessageAwaiting, bot, msg);
-      case "tMenu":
-        transactionMenuHandlers(responceMessageAwaiting, bot, msg);
-        break;
-      case "rent":
-        proxyRentResponceHandlers(responceMessageAwaiting, bot, msg, selectedProxyByUser);
-        break;
-      default:
-        bot.sendMessage(message.chat.id, "callback type is missing");
+    if (responceMessageAwaiting?.type) {
+      switch (responceMessageAwaiting.type) {
+        case "menu":
+          menuResponceHandlers(responceMessageAwaiting, bot, msg);
+          break;
+        case "proxyMenu":
+          proxyMenuResponceHandlers(responceMessageAwaiting, bot, msg);
+          break;
+        case 'smenu':
+          settingsResponceHandlers(responceMessageAwaiting, bot, msg);
+        case "tMenu":
+          transactionMenuHandlers(responceMessageAwaiting, bot, msg);
+          break;
+        case "rent":
+          proxyRentResponceHandlers(responceMessageAwaiting, bot, msg, selectedProxyByUser);
+          break;
+        default:
+          bot.sendMessage(message.chat.id, "callback type is missing");
+      }
     }
   });
 };

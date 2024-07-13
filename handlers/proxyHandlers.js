@@ -112,6 +112,6 @@ export function proxyMenuResponceHandlers(
       });
       break;
     default:
-      bot.sendMessage(message.chat.id, "unknown text responce");
+      bot.sendMessage(message.chat.id, "unknown proxy text responce");
   }
 }

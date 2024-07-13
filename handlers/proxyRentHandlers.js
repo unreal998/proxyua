@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { rentMenuDictionary, menuDictionary } from '../UI/dictionary.js'
 import { TOKEN } from "../constants.js";
-import { addNewTransaction } from '../database/api.js';
+import { addNewTransaction, fetchAdmins } from '../database/api.js';
 
 export default function proxyRentHandlers(  
     cbData,
@@ -244,7 +244,13 @@ export function proxyRentResponceHandlers(
                           ],
                         },
                       });
-                      
+                      fetchAdmins().then(data => {
+                        data.forEach(element => {
+                          bot.sendMessage(
+                          element.id,
+                          "Нова заявка на підключення")
+                        });
+                      })
                     });
                   })
                   .catch((error) => {
@@ -253,6 +259,6 @@ export function proxyRentResponceHandlers(
               }
               break;
         default:
-            bot.sendMessage(message.chat.id, "unknown text responce");
+            bot.sendMessage(message.chat.id, "unknown rent text responce");
     }
   }

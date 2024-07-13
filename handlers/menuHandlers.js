@@ -196,6 +196,6 @@ export function menuResponceHandlers(responceMessageAwaiting, bot, message) {
       });
       break;
     default:
-      bot.sendMessage(message.chat.id, "unknown text responce");
+      bot.sendMessage(message.chat.id, "unknown text menu responce");
   }
 }

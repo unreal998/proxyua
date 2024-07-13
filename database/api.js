@@ -66,7 +66,42 @@ export async function addNewTransaction(transactionData) {
     })
 }
 
-export async function notifyAdmins(transactionData) {
+export async function fetchAdmins() {
+    return new Promise(function(resolve, reject) {
+        const userDataList = ref(database, `users`);
+        onValue(userDataList, (snapshot) => {
+            const data = snapshot.val();
+            const adminsArray = []
+            for (const key in data) {
+                if (data[key].type === 'admin') {
+                    adminsArray.push(data[key]);
+                }
+            }
+            resolve(adminsArray)
+        }, {
+            onlyOnce: true
+        })
+    })
+}
+
+export async function getUsers() {
+    return new Promise(function(resolve, reject) {
+        const userDataList = ref(database, `users`);
+        onValue(userDataList, (snapshot) => {
+            const data = snapshot.val();
+            const adminsArray = []
+            for (const key in data) {
+                if (data[key].type === 'admin') {
+                }
+            }
+            resolve(adminsArray)
+        }, {
+            onlyOnce: true
+        })
+    })
+}
+
+export async function getUser(id) {
     return new Promise(function(resolve, reject) {
         set(ref(database, `transactions/${transactionData.id}`), transactionData);
         resolve(transactionData);

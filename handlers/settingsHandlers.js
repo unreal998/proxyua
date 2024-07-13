@@ -53,6 +53,6 @@ export function settingsResponceHandlers(responceMessageAwaiting, bot, message) 
         });
         break;
       default:
-        bot.sendMessage(message.chat.id, "unknown text responce");
+        bot.sendMessage(message.chat.id, "unknown settings text responce");
     }
   }
