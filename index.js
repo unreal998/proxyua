@@ -23,6 +23,7 @@ class ProxyUABot {
     this.selectedProxyByUser = {...selectedProxyByUserMock};
     this.startWork = this.startWork.bind(this);
     this.clean = this.clean.bind(this);
+    this.setupHandlers = setupHandlers.bind(this);
   }
 
   start() {
@@ -63,7 +64,7 @@ class ProxyUABot {
           );
         });
       }
-      setupHandlers(
+      this.setupHandlers(
         this.bot,
         this.userData,
         this.responseMessageAwaiting,
