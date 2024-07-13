@@ -26,7 +26,6 @@ export default function menuHandlers(
 ) {
   responceMessageAwaiting.type = "menu";
   responceMessageAwaiting.lastRequestMessage = cbData.btn;
-
   if (cbData.btn === menuDictionary.MAIN_MENU) {
     if (userData.type === "admin") {
       bot.sendMessage(message.chat.id, menuDictionary.MAIN_MENU, adminMenu);

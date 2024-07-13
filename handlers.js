@@ -9,7 +9,6 @@ const setupHandlers = (bot, userData, responceMessageAwaiting, selectedProxyByUs
     const message = callbackQuery.message;
     const cbData = callbackQuery.data;
     const parsedData = JSON.parse(cbData);
-
     switch (parsedData.type) {
       case "proxyMenu":
         proxyMenuHandlers(
@@ -71,6 +70,7 @@ const setupHandlers = (bot, userData, responceMessageAwaiting, selectedProxyByUs
           break;
         case 'smenu':
           settingsResponceHandlers(responceMessageAwaiting, bot, msg);
+          break;
         case "tMenu":
           transactionMenuHandlers(responceMessageAwaiting, bot, msg);
           break;

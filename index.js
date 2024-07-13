@@ -7,13 +7,6 @@ import { menuDictionary } from "./UI/dictionary.js";
 import { selectedProxyByUserMock, responseMessageAwaitingMock } from './mocks.js';
 
 class ProxyUABot {
-  bot;
-  userData;
-  selectedProxyByUser;
-  responseMessageAwaiting;
-  selectedProxyByUser;
-
-
   constructor() {
     this.bot = new TelegramBot(TOKEN, { polling: true });
     this.commandList = [
@@ -27,9 +20,9 @@ class ProxyUABot {
   }
 
   start() {
-    this.clean();
     this.bot.setMyCommands(this.commandList);
     this.bot.onText(/\/start/, (msg) => {
+      this.clean();
       this.startWork(msg);
     });
   }
@@ -40,20 +33,12 @@ class ProxyUABot {
     authorization(chatId).then((data) => {
       if (data) {
         this.userData = data;
-        if (data.type === "admin") {
-          this.bot.sendMessage(
-            chatId,
-            `Привіт ${userFirstName}\n${menuDictionary.MAIN_MENU}`,
-            adminMenu
-          );
-        } else {
-          this.selectedProxyByUser.chatId = chatId;
-          this.bot.sendMessage(
-            chatId,
-            `Привіт ${userFirstName}\n${menuDictionary.MAIN_MENU}`,
-            userMenu
-          );
-        }
+        const menu = data.type === "admin" ? adminMenu : userMenu;
+        this.bot.sendMessage(
+          chatId,
+          `Привіт ${userFirstName}\n${menuDictionary.MAIN_MENU}`,
+          menu
+        );
       } else {
         addNewUser(msg).then((data) => {
           this.userData = data;
@@ -77,6 +62,7 @@ class ProxyUABot {
     this.responseMessageAwaiting = {...responseMessageAwaitingMock};
     this.selectedProxyByUser = {...selectedProxyByUserMock};
     this.bot.removeAllListeners();
+    this.bot.off();
   }
 }
 
