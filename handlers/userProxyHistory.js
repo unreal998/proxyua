@@ -1,5 +1,5 @@
 import { getTransactionList, getTransactionData } from "../database/api.js";
-import { menuDictionary } from "../UI/dictionary.js";
+import { menuDictionary, userHistoryMenu } from "../UI/dictionary.js";
 
 export default function userProxyHistoryHandler(cbData, bot, message) {
   const chatId = message.chat.id;
@@ -17,15 +17,13 @@ export default function userProxyHistoryHandler(cbData, bot, message) {
       );
 
       if (userTransactions.length === 0) {
-        bot.sendMessage(chatId, "У вас немає історії орендованих проксі.");
+        bot.sendMessage(chatId, userHistoryMenu.EMPTY);
         return;
       }
 
-      userTransactions.sort(
-        (a, b) => b.timeStampInMilliseconds - a.timeStampInMilliseconds
-      );
-
-      const lastTransactions = userTransactions.slice(0, 4);
+      const lastTransactions = userTransactions
+        .sort((a, b) => a.timeStampInMilliseconds - b.timeStampInMilliseconds)
+        .slice(-4);
 
       const buttons = lastTransactions.map((transaction) => ({
         text: `🖥️ ${transaction.proxyAddress}`,
@@ -37,7 +35,7 @@ export default function userProxyHistoryHandler(cbData, bot, message) {
 
       const keyboard = buttons.map((button) => [button]);
 
-      bot.sendMessage(chatId, "Ваші орендовані проксі:", {
+      bot.sendMessage(chatId, userHistoryMenu.HISTORY_HEADER, {
         reply_markup: {
           inline_keyboard: [
             ...keyboard,
@@ -56,21 +54,45 @@ export default function userProxyHistoryHandler(cbData, bot, message) {
     })
     .catch((err) => {
       console.error("Error fetching transactions:", err);
-      bot.sendMessage(chatId, "Виникла помилка при отриманні історії.");
+      bot.sendMessage(chatId, userHistoryMenuю.ERROR);
     });
+}
+
+function getFormattedRentTime(rentTime) {
+  switch (rentTime) {
+    case 1800000:
+      return userHistoryMenu.TIME_1;
+    case 3600000:
+      return userHistoryMenu.TIME_2;
+    case 43200000:
+      return userHistoryMenu.TIME_3;
+    case 86400000:
+      return userHistoryMenu.TIME_4;
+    case 259200000:
+      return userHistoryMenu.TIME_5;
+    case 604800000:
+      return userHistoryMenu.TIME_6;
+    case 2592000000:
+      return userHistoryMenu.TIME_7;
+    default:
+      return `${rentTime} мс`;
+  }
 }
 
 function showTransactionDetails(transactionId, bot, message) {
   getTransactionData(transactionId)
     .then((transaction) => {
+      const formattedRentTime = getFormattedRentTime(transaction.rentTime);
       const details = `
-        🖥️ АПІ Адреса: ${transaction.proxyAddress}
-        ⏳ Час оренди: ${new Date(transaction.rentTime).toLocaleString()}
-        📄 Статус: ${transaction.status}
-        💰 Вартість: ${transaction.price}
-        📷 Фото оплати: ${
-          transaction.photoURL ? transaction.photoURL : "Відсутнє"
-        }
+${userHistoryMenu.PROXY} ${transaction.proxyAddress}\n
+${userHistoryMenu.RENT_TIME} ${formattedRentTime}\n
+${userHistoryMenu.STATUS} ${transaction.status}\n
+${userHistoryMenu.PRICE} ${transaction.price} usd\n
+${userHistoryMenu.PHOTO} ${
+        transaction.photoURL
+          ? transaction.photoURL
+          : userHistoryMenu.PHOTO_NOT_FOUND
+      }
       `;
 
       bot.sendMessage(message.chat.id, details, {
@@ -91,9 +113,6 @@ function showTransactionDetails(transactionId, bot, message) {
     })
     .catch((err) => {
       console.error("Error fetching transaction details:", err);
-      bot.sendMessage(
-        message.chat.id,
-        "Виникла помилка при отриманні деталей транзакції."
-      );
+      bot.sendMessage(message.chat.id, userHistoryMenu.ERROR_HISTORY);
     });
 }
