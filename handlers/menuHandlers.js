@@ -40,7 +40,7 @@ export default function menuHandlers(
         const listObject = {
           text: `${element.address} - ${element.status ? "🟢" : "🔴"}`,
           callback_data: JSON.stringify({
-            type: "proxyMenu",
+            type: "plMenu",
             id: key,
             btn: proxyListMenu.INFO,
           }),
@@ -48,7 +48,7 @@ export default function menuHandlers(
         const editButton = {
           text: proxyListMenu.EDIT,
           callback_data: JSON.stringify({
-            type: "proxyMenu",
+            type: "plMenu",
             id: key,
             btn: proxyListMenu.EDIT,
           }),
@@ -56,7 +56,7 @@ export default function menuHandlers(
         const removeButton = {
           text: proxyListMenu.REMOVE,
           callback_data: JSON.stringify({
-            type: "proxyMenu",
+            type: "plMenu",
             id: key,
             btn: proxyListMenu.REMOVE,
           }),

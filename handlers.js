@@ -10,7 +10,7 @@ const setupHandlers = (bot, userData, responceMessageAwaiting, selectedProxyByUs
     const cbData = callbackQuery.data;
     const parsedData = JSON.parse(cbData);
     switch (parsedData.type) {
-      case "proxyMenu":
+      case "plMenu":
         proxyMenuHandlers(
           parsedData,
           bot,
@@ -65,7 +65,7 @@ const setupHandlers = (bot, userData, responceMessageAwaiting, selectedProxyByUs
         case "menu":
           menuResponceHandlers(responceMessageAwaiting, bot, msg);
           break;
-        case "proxyMenu":
+        case "plMenu":
           proxyMenuResponceHandlers(responceMessageAwaiting, bot, msg);
           break;
         case 'smenu':

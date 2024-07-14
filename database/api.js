@@ -27,6 +27,19 @@ export async function addNewUser(msg) {
     Promise.resolve(userData);
 }
 
+export async function getUserData(chatId) {
+    const userData = ref(database, `users/${chatId}`);
+    return new Promise(function(resolve, reject) {
+        onValue(userData, (snapshot) => {
+            const data = snapshot.val();
+            resolve(data);
+        }, {
+            onlyOnce: true
+        });
+    })
+
+}
+
 export async function updateUserData(userName) {
     return new Promise(function(resolve, reject) {
         const userDataList = ref(database, `users`);
@@ -103,7 +116,7 @@ export async function getUsers() {
 
 export async function getUser(id) {
     return new Promise(function(resolve, reject) {
-        set(ref(database, `transactions/${transactionData.id}`), transactionData);
+        set(ref(database, `transactions/${id}`), transactionData);
         resolve(transactionData);
     })
 }
@@ -183,6 +196,39 @@ export async function updateProxyData(proxyData, id) {
         onValue(proxyDataList, (snapshot) => {
             const data = snapshot.val();
             resolve(data);
+        }, {
+            onlyOnce: true
+        })
+    })
+}
+
+export async function updateProxyByAddressData(proxyData, address) {
+    return new Promise(function(resolve, reject) {
+        const proxyDataListRef = ref(database, `proxy`);
+        onValue(proxyDataListRef, (snapshot) => {
+            const data = snapshot.val();
+            let searchedProxy;
+            for (const key in data) {
+                const proxyElement = data[key];
+                if (proxyElement.address === address) {
+                    searchedProxy = key;
+                }
+            }
+
+            if (searchedProxy) {
+                update(ref(database, `proxy/${searchedProxy}`), {
+                    ...proxyData
+                });
+                const proxyDataList = ref(database, `proxy/${searchedProxy}`);
+                onValue(proxyDataList, (snapshot) => {
+                    const data = snapshot.val();
+                    resolve(data);
+                }, {
+                    onlyOnce: true
+                })
+            } else {
+                reject('proxy not found');
+            }
         }, {
             onlyOnce: true
         })

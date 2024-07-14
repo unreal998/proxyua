@@ -1,4 +1,4 @@
-import { settingsMenuDictionary } from "./dictionary.js";
+import { settingsMenuDictionary, menuDictionary } from "./dictionary.js";
 
 export const adminSettingsMenu = {
     reply_markup: {
@@ -24,7 +24,7 @@ export const adminSettingsMenu = {
         ],
         [{ text: "🔙 Назад", callback_data: JSON.stringify({
             type: 'menu',
-            btn: "Назад"
+            btn: menuDictionary.MAIN_MENU
           })}],
       ],
     }

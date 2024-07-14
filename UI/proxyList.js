@@ -22,21 +22,21 @@ export function generateEditProxyMenu(id) {
                 [
                     {
                         text: proxyListMenu.EDIT_LOGIN, callback_data: JSON.stringify({
-                            type: 'proxyMenu',
+                            type: 'plMenu',
                             id: id,
                             btn: proxyListMenu.EDIT_LOGIN,
                           })
                     },
                     {
                         text: proxyListMenu.EDIT_PASSWORD, callback_data: JSON.stringify({
-                            type: 'proxyMenu',
+                            type: 'plMenu',
                             id: id,
                             btn: proxyListMenu.EDIT_PASSWORD,
                           })
                     },
                     {
                         text: proxyListMenu.EDIT_ADDRESS, callback_data: JSON.stringify({
-                            type: 'proxyMenu',
+                            type: 'plMenu',
                             id: id,
                             btn: proxyListMenu.EDIT_ADDRESS,
                           })

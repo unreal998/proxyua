@@ -224,6 +224,7 @@ export function proxyRentResponceHandlers(
             selectedProxyByUser.photoURL = fileUrl;
 
             selectedProxyByUser.id = randomUUID().slice(0, 9);
+            selectedProxyByUser.chatId = message.chat.id;
             addNewTransaction(selectedProxyByUser).then(() => {
               bot.sendMessage(
                 message.chat.id,

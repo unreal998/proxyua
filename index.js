@@ -62,6 +62,7 @@ class ProxyUABot {
   clean() {
     this.responseMessageAwaiting = { ...responseMessageAwaitingMock };
     this.selectedProxyByUser = { ...selectedProxyByUserMock };
+    this.userData = {};
     this.bot.removeAllListeners();
     this.bot.off();
   }
