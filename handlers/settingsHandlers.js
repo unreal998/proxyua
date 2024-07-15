@@ -1,6 +1,7 @@
 import { settingsMenuDictionary } from '../UI/dictionary.js';
-import { updateUserData, updateWalletDataData } from '../database/api.js';
+import { updateUserData, updateWalletData } from '../database/api.js';
 import { createBackToMenuMenu } from '../UI/menus.js';
+import { TOKEN } from '../constants.js';
 
 export default function settingsHandlers(cbData, bot, message, userData, responceMessageAwaiting) {
     responceMessageAwaiting.type = cbData.type;
@@ -43,11 +44,26 @@ export function settingsResponceHandlers(responceMessageAwaiting, bot, message) 
           });
         break;
       case settingsMenuDictionary.TRUST_SETTINGS:
+        const fileId = message.photo[message.photo.length - 1].file_id;
+        bot
+          .getFile(fileId)
+          .then((file) => {
+            const filePath = file.file_path;
+            const fileUrl = `https://api.telegram.org/file/bot${TOKEN}/${filePath}`;
+            updateWalletData(fileUrl, responceMessageAwaiting.lastRequestMessage).then((data) => {
+                bot.sendMessage(
+                    message.chat.id,
+                    `Дані ${data.name} оновлено: ${data.value}`,
+                    createBackToMenuMenu()
+                );
+            });
+          })
+        break;
       case settingsMenuDictionary.MONOBANK_SETTINGS:
-        updateWalletDataData(message.text).then((data) => {
+        updateWalletData(message.text, responceMessageAwaiting.lastRequestMessage).then((data) => {
             bot.sendMessage(
                 message.chat.id,
-                "Дані оновлено",
+                `Дані ${data.name} оновлено: ${data.value}`,
                 createBackToMenuMenu()
             );
         });

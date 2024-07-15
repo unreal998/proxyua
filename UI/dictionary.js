@@ -9,6 +9,8 @@ export const menuDictionary = {
 export const proxyListMenu = {
   EDIT: "Редагувати",
   REMOVE: "Видалити",
+  YES: 'Так',
+  NO: 'Ні',
   EDIT_LOGIN: "Логін",
   EDIT_PASSWORD: "Пароль",
   EDIT_ADDRESS: "Адресу",

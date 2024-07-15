@@ -1,7 +1,7 @@
-import { proxyListMenu } from "../UI/dictionary.js";
+import { proxyListMenu, menuDictionary } from "../UI/dictionary.js";
 import { createBackToMenuMenu } from "../UI/menus.js";
-import { generateEditProxyMenu } from "../UI/proxyList.js";
-import { getProxyData, updateProxyData } from "../database/api.js";
+import { generateEditProxyMenu, generateProxyRemoveConfirmation } from "../UI/proxyList.js";
+import { getProxyData, updateProxyData, deleteProxy } from "../database/api.js";
 
 export default function proxyMenuHandlers(
   cbData,
@@ -23,9 +23,27 @@ export default function proxyMenuHandlers(
         );
         break;
       case proxyListMenu.REMOVE:
+        const buttonList = [];
+        const yestBtn = {
+          text: proxyListMenu.YES,
+          callback_data: JSON.stringify({
+            btn: proxyListMenu.YES,
+            type: cbData.type,
+            proxyId: cbData.id,
+          }),
+        };
+        const noButton = {
+          text: proxyListMenu.NO,
+          callback_data: JSON.stringify({
+            type: "menu",
+            btn: menuDictionary.MAIN_MENU,
+          }),
+        };
+        buttonList.push([yestBtn, noButton]);
         bot.sendMessage(
           message.chat.id,
-          `Ви впевнені що хочете видалити дані проксі?`
+          `Ви впевнені що хочете видалити проксі?`,
+          generateProxyRemoveConfirmation(buttonList)
         );
         break;
       case proxyListMenu.INFO:
@@ -41,21 +59,26 @@ ${data.status ? '' : `Арендовано: ${data.rentedBy} \n
 Кінець аренди ${new Date(data.rentEnd).toLocaleString()}`}`, createBackToMenuMenu());
                 })
                 break;
-            case proxyListMenu.EDIT_LOGIN:
-                bot.sendMessage(message.chat.id, `Введіть новий логін`);
-                break;
-            case proxyListMenu.EDIT_PASSWORD:
-                bot.sendMessage(message.chat.id, `Введіть новий пароль`);
-                break;
-            case proxyListMenu.EDIT_ADDRESS:
-                bot.sendMessage(message.chat.id, `Введіть нову адресу`);
-                break;
-            default:
-                bot.sendMessage(message.chat.id, `Ви нажали proxy кнопку: ${cbData.btn}`);
-        }
-    } else {
-        bot.sendMessage(message.chat.id, `У вас немає доступу для перегляду`);
+      case proxyListMenu.EDIT_LOGIN:
+        bot.sendMessage(message.chat.id, `Введіть новий логін`);
+        break;
+      case proxyListMenu.EDIT_PASSWORD:
+        bot.sendMessage(message.chat.id, `Введіть новий пароль`);
+        break;
+      case proxyListMenu.EDIT_ADDRESS:
+        bot.sendMessage(message.chat.id, `Введіть нову адресу`);
+        break;
+      case proxyListMenu.YES:
+        deleteProxy(cbData.proxyId).then((data) => {
+          bot.sendMessage(message.chat.id, data);
+        })        
+        break;
+      default:
+        bot.sendMessage(message.chat.id, `Ви нажали proxy кнопку: ${cbData.btn}`);
     }
+  } else {
+      bot.sendMessage(message.chat.id, `У вас немає доступу для перегляду`);
+  }
 }
 
 export function proxyMenuResponceHandlers(

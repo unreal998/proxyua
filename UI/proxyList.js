@@ -15,6 +15,20 @@ export function generateProxyListMenu(list) {
     }
 }
 
+export function generateProxyRemoveConfirmation(list) {
+    return {
+        reply_markup: {
+            inline_keyboard: [...list, [{
+                text: `🔙 ${menuDictionary.MAIN_MENU}`,
+                callback_data: JSON.stringify({
+                  type: "menu",
+                  btn: menuDictionary.MAIN_MENU,
+                }),
+              }],],
+        }
+    }
+}
+
 export function generateEditProxyMenu(id) {
     return {
         reply_markup: {

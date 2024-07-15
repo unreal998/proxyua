@@ -1,4 +1,4 @@
-import { ref, onValue, set, update} from "firebase/database";
+import { ref, onValue, set, update, remove} from "firebase/database";
 import { settingsMenuDictionary } from '../UI/dictionary.js';
 import database from "./index.js";
 
@@ -12,7 +12,17 @@ export async function authorization(chatId) {
             onlyOnce: true
         });
     })
+}
 
+export async function deleteProxy(id) {
+    remove(ref(database, `proxy/${id}`));
+    return new Promise(function(resolve, reject) {
+        onValue(ref(database, `proxy/${id}`), (snapshot) => {
+            resolve('Проксі успішно видалено');
+        }, {
+            onlyOnce: true
+        });
+    })
 }
 
 export async function addNewUser(msg) {
@@ -60,15 +70,20 @@ export async function updateUserData(userName) {
     })
 }
 
-export async function updateWalletDataData(message, type) {
+export async function updateWalletData(message, type) {
     return new Promise(function(resolve, reject) {
-            update(ref(database, `wallet/${type === settingsMenuDictionary.TRUST_SETTINGS ? 'Trust' : 'Monobank'}`), {
-                value: message
-            });
-            resolve(data[key])
+        const walletRefString = `wallet/${type === settingsMenuDictionary.TRUST_SETTINGS ? 'Trust' : 'Monobank'}`;
+        update(ref(database, walletRefString), {
+            value: message
+        });
+        const walletRef = ref(database, walletRefString);
+        onValue(walletRef, (snapshot) => {
+            const snapData = snapshot.val();
+            resolve(snapData);
         }, {
             onlyOnce: true
         })
+    })
 }
 
 
@@ -111,13 +126,6 @@ export async function getUsers() {
         }, {
             onlyOnce: true
         })
-    })
-}
-
-export async function getUser(id) {
-    return new Promise(function(resolve, reject) {
-        set(ref(database, `transactions/${id}`), transactionData);
-        resolve(transactionData);
     })
 }
 
