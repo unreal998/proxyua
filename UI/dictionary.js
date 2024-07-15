@@ -39,8 +39,8 @@ export const settingsMenuDictionary = {
 export const rentMenuDictionary = {
   RENT_TIME: "rentTime",
   RENT_ADDRESS: "rAddress",
-  BINANCE: "💰 Binance",
-  MONOBANK: "🏦 Monobank",
+  TRUST: "Trust",
+  MONOBANK: "Monobank",
   PAID: "paid",
   HOW_LONG: "⏳ На скільки часу ви хочете орендувати проксі?",
   TIME_1: "🔹 30 хв. - 0.5 usd",

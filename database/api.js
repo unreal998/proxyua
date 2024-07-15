@@ -86,6 +86,18 @@ export async function updateWalletData(message, type) {
     })
 }
 
+export async function getWalletData(type) {
+    return new Promise(function(resolve, reject) {
+        const walletRefString = `wallet/${type === settingsMenuDictionary.TRUST_SETTINGS ? 'Trust' : 'Monobank'}`;
+        const walletRef = ref(database, walletRefString);
+        onValue(walletRef, (snapshot) => {
+            const snapData = snapshot.val();
+            resolve(snapData);
+        }, {
+            onlyOnce: true
+        })
+    })
+}
 
 export async function addNewTransaction(transactionData) {
     return new Promise(function(resolve, reject) {

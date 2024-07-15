@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { rentMenuDictionary, menuDictionary } from "../UI/dictionary.js";
 import { TOKEN } from "../constants.js";
-import { addNewTransaction, fetchAdmins } from "../database/api.js";
+import { addNewTransaction, fetchAdmins, getWalletData } from "../database/api.js";
 
 export default function proxyRentHandlers(
   cbData,
@@ -137,10 +137,10 @@ export default function proxyRentHandlers(
           inline_keyboard: [
             [
               {
-                text: rentMenuDictionary.BINANCE,
+                text: rentMenuDictionary.TRUST,
                 callback_data: JSON.stringify({
                   type: cbData.type,
-                  btn: rentMenuDictionary.BINANCE,
+                  btn: rentMenuDictionary.TRUST,
                 }),
               },
               {
@@ -155,47 +155,49 @@ export default function proxyRentHandlers(
         },
       });
       break;
-    case rentMenuDictionary.BINANCE:
-      bot.sendMessage(
-        message.chat.id,
-        `Для оплати проксі ${selectedProxyByUser.proxyAddress} на ${selectedProxyByUser.rentTime} вам слід сплатити ${selectedProxyByUser.price} usd \nРеквізити рахунку Бінанс: \n `,
-        {
+    case rentMenuDictionary.TRUST:
+      getWalletData(rentMenuDictionary.TRUST).then(data => {
+        console.log(data.value);
+        bot.sendPhoto(message.chat.id, data.value, {
+          caption: `Для оплати проксі ${selectedProxyByUser.proxyAddress} на ${selectedProxyByUser.rentTime} вам слід сплатити ${selectedProxyByUser.price} usd \nРеквізити рахунку Бінанс: \n `,
           reply_markup: {
-            inline_keyboard: [
-              [
-                {
-                  text: rentMenuDictionary.PAYED,
-                  callback_data: JSON.stringify({
-                    type: cbData.type,
-                    btn: rentMenuDictionary.PAID,
-                  }),
-                },
+              inline_keyboard: [
+                [
+                  {
+                    text: rentMenuDictionary.PAYED,
+                    callback_data: JSON.stringify({
+                      type: cbData.type,
+                      btn: rentMenuDictionary.PAID,
+                    }),
+                  },
+                ],
               ],
-            ],
-          },
-        }
-      );
+          }
+        })
+      })
       break;
     case rentMenuDictionary.MONOBANK:
-      bot.sendMessage(
-        message.chat.id,
-        `Для оплати проксі ${selectedProxyByUser.proxyAddress} на ${selectedProxyByUser.rentTime} вам слід сплатити ${selectedProxyByUser.price} usd \nРеквізити рахунку монобанк: \n `,
-        {
-          reply_markup: {
-            inline_keyboard: [
-              [
-                {
-                  text: rentMenuDictionary.PAYED,
-                  callback_data: JSON.stringify({
-                    type: cbData.type,
-                    btn: rentMenuDictionary.PAID,
-                  }),
-                },
+      getWalletData(cbData.btn).then(data => {
+        bot.sendMessage(
+          message.chat.id,
+          `Для оплати проксі ${selectedProxyByUser.proxyAddress} на ${selectedProxyByUser.rentTime} вам слід сплатити ${selectedProxyByUser.price} usd \nРеквізити рахунку монобанк: ${data.value}\n `,
+          {
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  {
+                    text: rentMenuDictionary.PAYED,
+                    callback_data: JSON.stringify({
+                      type: cbData.type,
+                      btn: rentMenuDictionary.PAID,
+                    }),
+                  },
+                ],
               ],
-            ],
-          },
-        }
-      );
+            },
+          }
+        );
+      })
       break;
     case rentMenuDictionary.PAID:
       bot.sendMessage(message.chat.id, rentMenuDictionary.ATTACHED);
